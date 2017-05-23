@@ -5,14 +5,14 @@
 import 'dart:io';
 
 import 'package:pub/src/exit_codes.dart' as exit_codes;
-import 'package:scheduled_test/scheduled_test.dart';
+import 'package:test/test.dart';
 
 import '../../descriptor.dart' as d;
 import '../../test_pub.dart';
 
 main() {
   setUp(() {
-    servePackages((builder) {
+    return servePackages((builder) {
       builder.serve("foo", "1.2.3");
       builder.serve("foo", "1.2.4");
       builder.serve("foo", "1.2.5");
@@ -21,9 +21,9 @@ main() {
     });
   });
 
-  integration('reinstalls previously cached hosted packages', () {
+  test('reinstalls previously cached hosted packages', () async {
     // Set up a cache with some broken packages.
-    d.dir(cachePath, [
+    await d.dir(cachePath, [
       d.dir('hosted', [
         d.async(globalServer.port.then((p) => d.dir('localhost%58$p', [
               d.dir("foo-1.2.3",
@@ -37,7 +37,7 @@ main() {
     ]).create();
 
     // Repair them.
-    schedulePub(
+    await runPub(
         args: ["cache", "repair"],
         output: '''
           Downloading bar 1.2.4...
@@ -53,16 +53,16 @@ main() {
         ]));
 
     // The broken versions should have been replaced.
-    d.hostedCache([
+    await d.hostedCache([
       d.dir("bar-1.2.4", [d.nothing("broken.txt")]),
       d.dir("foo-1.2.3", [d.nothing("broken.txt")]),
       d.dir("foo-1.2.5", [d.nothing("broken.txt")])
     ]).validate();
   });
 
-  integration('deletes packages without pubspecs', () {
+  test('deletes packages without pubspecs', () async {
     // Set up a cache with some broken packages.
-    d.dir(cachePath, [
+    await d.dir(cachePath, [
       d.dir('hosted', [
         d.async(globalServer.port.then((p) => d.dir('localhost%58$p', [
               d.dir("bar-1.2.4", [d.file("broken.txt")]),
@@ -72,7 +72,7 @@ main() {
       ])
     ]).create();
 
-    schedulePub(
+    await runPub(
         args: ["cache", "repair"],
         error: allOf([
           contains('Failed to load package:'),
@@ -89,16 +89,16 @@ main() {
         ]),
         exitCode: exit_codes.UNAVAILABLE);
 
-    d.hostedCache([
+    await d.hostedCache([
       d.nothing("bar-1.2.4"),
       d.nothing("foo-1.2.3"),
       d.nothing("foo-1.2.5"),
     ]).validate();
   });
 
-  integration('deletes packages with invalid pubspecs', () {
+  test('deletes packages with invalid pubspecs', () async {
     // Set up a cache with some broken packages.
-    d.dir(cachePath, [
+    await d.dir(cachePath, [
       d.dir('hosted', [
         d.async(globalServer.port.then((p) => d.dir('localhost%58$p', [
               d.dir("bar-1.2.4", [d.file("pubspec.yaml", "{")]),
@@ -108,7 +108,7 @@ main() {
       ])
     ]).create();
 
-    schedulePub(
+    await runPub(
         args: ["cache", "repair"],
         error: allOf([
           contains('Failed to load package:'),
@@ -125,7 +125,7 @@ main() {
         ]),
         exitCode: exit_codes.UNAVAILABLE);
 
-    d.hostedCache([
+    await d.hostedCache([
       d.nothing("bar-1.2.4"),
       d.nothing("foo-1.2.3"),
       d.nothing("foo-1.2.5"),

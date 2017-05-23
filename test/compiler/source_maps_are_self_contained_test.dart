@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:scheduled_test/scheduled_test.dart';
+import 'package:test/test.dart';
 
 import '../descriptor.dart' as d;
 import '../test_pub.dart';
@@ -13,9 +13,9 @@ main() {
   // not precise as to which source libraries will actually be referenced in
   // the source map. But this tries to use a type from a package and validate
   // that its source ends up in the source map with a valid URI.
-  integrationWithCompiler(
-      "Source maps URIs for files in packages are self-contained", (compiler) {
-    d.dir("foo", [
+  testWithCompiler("Source maps URIs for files in packages are self-contained",
+      (compiler) async {
+    await d.dir("foo", [
       d.libPubspec("foo", "0.0.1"),
       d.dir("lib", [
         d.file(
@@ -31,7 +31,7 @@ main() {
       ])
     ]).create();
 
-    d.dir(appPath, [
+    await d.dir(appPath, [
       d.appPubspec({
         "foo": {"path": "../foo"}
       }),
@@ -53,8 +53,8 @@ main() {
       ])
     ]).create();
 
-    pubGet();
-    schedulePub(
+    await pubGet();
+    await runPub(
         args: ["build", "--mode", "debug", "--compiler", compiler.name],
         output: new RegExp(r'Built \d+ files to "build".'),
         exitCode: 0);
@@ -93,7 +93,7 @@ main() {
         break;
     }
 
-    d.dir(appPath, [
+    await d.dir(appPath, [
       d.dir("build", [expectedWebDir])
     ]).validate();
   });

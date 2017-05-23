@@ -4,11 +4,12 @@
 
 import 'dart:convert';
 
-import 'package:pub/src/exit_codes.dart' as exit_codes;
-import 'package:scheduled_test/scheduled_process.dart';
-import 'package:scheduled_test/scheduled_server.dart';
-import 'package:scheduled_test/scheduled_test.dart';
 import 'package:shelf/shelf.dart' as shelf;
+import 'package:shelf_test_handler/shelf_test_handler';
+import 'package:test/test.dart';
+import 'package:test_process/test_process.dart';
+
+import 'package:pub/src/exit_codes.dart' as exit_codes;
 
 import 'descriptor.dart' as d;
 import 'test_pub.dart';
@@ -28,41 +29,42 @@ Run "pub help" to see global options.
 See http://dartlang.org/tools/pub/cmd/pub-uploader.html for detailed documentation.
 ''';
 
-ScheduledProcess startPubUploader(ScheduledServer server, List<String> args) {
-  var tokenEndpoint =
-      server.url.then((url) => url.resolve('/token').toString());
+Future<TestProcess> startPubUploader(
+    ShelfTestServer server, List<String> args) {
+  var tokenEndpoint = server.url.resolve('/token').toString();
   var allArgs = <Object>['uploader', '--server', tokenEndpoint]..addAll(args);
   return startPub(args: allArgs, tokenEndpoint: tokenEndpoint);
 }
 
 main() {
   group('displays usage', () {
-    integration('when run with no arguments', () {
-      schedulePub(
+    test('when run with no arguments', () {
+      return runPub(
           args: ['uploader'], output: USAGE_STRING, exitCode: exit_codes.USAGE);
     });
 
-    integration('when run with only a command', () {
-      schedulePub(
+    test('when run with only a command', () {
+      return runPub(
           args: ['uploader', 'add'],
           output: USAGE_STRING,
           exitCode: exit_codes.USAGE);
     });
 
-    integration('when run with an invalid command', () {
-      schedulePub(
+    test('when run with an invalid command', () {
+      return runPub(
           args: ['uploader', 'foo', 'email'],
           output: USAGE_STRING,
           exitCode: exit_codes.USAGE);
     });
   });
 
-  integration('adds an uploader', () {
-    var server = new ScheduledServer();
-    d.credentialsFile(server, 'access token').create();
-    var pub = startPubUploader(server, ['--package', 'pkg', 'add', 'email']);
+  test('adds an uploader', () async {
+    var server = await ShelfTestServer.start();
+    await d.credentialsFile(server, 'access token').create();
+    var pub =
+        await startPubUploader(server, ['--package', 'pkg', 'add', 'email']);
 
-    server.handle('POST', '/api/packages/pkg/uploaders', (request) {
+    await server.handle('POST', '/api/packages/pkg/uploaders', (request) {
       return request.readAsString().then((body) {
         expect(body, equals('email=email'));
 
@@ -74,70 +76,55 @@ main() {
       });
     });
 
-    pub.stdout.expect('Good job!');
-    pub.shouldExit(exit_codes.SUCCESS);
+    expect(pub.stdout, emits('Good job!'));
+    await pub.shouldExit(exit_codes.SUCCESS);
   });
 
-  integration('removes an uploader', () {
-    var server = new ScheduledServer();
-    d.credentialsFile(server, 'access token').create();
-    var pub = startPubUploader(server, ['--package', 'pkg', 'remove', 'email']);
-
-    server.handle('DELETE', '/api/packages/pkg/uploaders/email', (request) {
-      return new shelf.Response.ok(
-          JSON.encode({
-            'success': {'message': 'Good job!'}
-          }),
-          headers: {'content-type': 'application/json'});
-    });
-
-    pub.stdout.expect('Good job!');
-    pub.shouldExit(exit_codes.SUCCESS);
-  });
-
-  integration('defaults to the current package', () {
-    d.validPackage.create();
-
-    var server = new ScheduledServer();
-    d.credentialsFile(server, 'access token').create();
-    var pub = startPubUploader(server, ['add', 'email']);
-
-    server.handle('POST', '/api/packages/test_pkg/uploaders', (request) {
-      return new shelf.Response.ok(
-          JSON.encode({
-            'success': {'message': 'Good job!'}
-          }),
-          headers: {'content-type': 'application/json'});
-    });
-
-    pub.stdout.expect('Good job!');
-    pub.shouldExit(exit_codes.SUCCESS);
-  });
-
-  integration('add provides an error', () {
-    var server = new ScheduledServer();
-    d.credentialsFile(server, 'access token').create();
-    var pub = startPubUploader(server, ['--package', 'pkg', 'add', 'email']);
-
-    server.handle('POST', '/api/packages/pkg/uploaders', (request) {
-      return new shelf.Response(400,
-          body: JSON.encode({
-            'error': {'message': 'Bad job!'}
-          }),
-          headers: {'content-type': 'application/json'});
-    });
-
-    pub.stderr.expect('Bad job!');
-    pub.shouldExit(1);
-  });
-
-  integration('remove provides an error', () {
-    var server = new ScheduledServer();
-    d.credentialsFile(server, 'access token').create();
+  test('removes an uploader', () async {
+    var server = await ShelfTestServer.start();
+    await d.credentialsFile(server, 'access token').create();
     var pub =
-        startPubUploader(server, ['--package', 'pkg', 'remove', 'e/mail']);
+        await startPubUploader(server, ['--package', 'pkg', 'remove', 'email']);
 
-    server.handle('DELETE', '/api/packages/pkg/uploaders/e%2Fmail', (request) {
+    await server.handle('DELETE', '/api/packages/pkg/uploaders/email',
+        (request) {
+      return new shelf.Response.ok(
+          JSON.encode({
+            'success': {'message': 'Good job!'}
+          }),
+          headers: {'content-type': 'application/json'});
+    });
+
+    expect(pub.stdout, emits('Good job!'));
+    await pub.shouldExit(exit_codes.SUCCESS);
+  });
+
+  test('defaults to the current package', () async {
+    await d.validPackage.create();
+
+    var server = await ShelfTestServer.start();
+    await d.credentialsFile(server, 'access token').create();
+    var pub = await startPubUploader(server, ['add', 'email']);
+
+    await server.handle('POST', '/api/packages/test_pkg/uploaders', (request) {
+      return new shelf.Response.ok(
+          JSON.encode({
+            'success': {'message': 'Good job!'}
+          }),
+          headers: {'content-type': 'application/json'});
+    });
+
+    expect(pub.stdout, emits('Good job!'));
+    await pub.shouldExit(exit_codes.SUCCESS);
+  });
+
+  test('add provides an error', () async {
+    var server = await ShelfTestServer.start();
+    await d.credentialsFile(server, 'access token').create();
+    var pub =
+        await startPubUploader(server, ['--package', 'pkg', 'add', 'email']);
+
+    await server.handle('POST', '/api/packages/pkg/uploaders', (request) {
       return new shelf.Response(400,
           body: JSON.encode({
             'error': {'message': 'Bad job!'}
@@ -145,33 +132,58 @@ main() {
           headers: {'content-type': 'application/json'});
     });
 
-    pub.stderr.expect('Bad job!');
-    pub.shouldExit(1);
+    expect(pub.stderr, emits('Bad job!'));
+    await pub.shouldExit(1);
   });
 
-  integration('add provides invalid JSON', () {
-    var server = new ScheduledServer();
-    d.credentialsFile(server, 'access token').create();
-    var pub = startPubUploader(server, ['--package', 'pkg', 'add', 'email']);
+  test('remove provides an error', () async {
+    var server = await ShelfTestServer.start();
+    await d.credentialsFile(server, 'access token').create();
+    var pub = await startPubUploader(
+        server, ['--package', 'pkg', 'remove', 'e/mail']);
 
-    server.handle('POST', '/api/packages/pkg/uploaders',
-        (request) => new shelf.Response.ok("{not json"));
+    await server.handle('DELETE', '/api/packages/pkg/uploaders/e%2Fmail',
+        (request) {
+      return new shelf.Response(400,
+          body: JSON.encode({
+            'error': {'message': 'Bad job!'}
+          }),
+          headers: {'content-type': 'application/json'});
+    });
 
-    pub.stderr.expect(emitsLines('Invalid server response:\n'
-        '{not json'));
-    pub.shouldExit(1);
+    expect(pub.stderr, emits('Bad job!'));
+    await pub.shouldExit(1);
   });
 
-  integration('remove provides invalid JSON', () {
-    var server = new ScheduledServer();
-    d.credentialsFile(server, 'access token').create();
-    var pub = startPubUploader(server, ['--package', 'pkg', 'remove', 'email']);
+  test('add provides invalid JSON', () async {
+    var server = await ShelfTestServer.start();
+    await d.credentialsFile(server, 'access token').create();
+    var pub =
+        await startPubUploader(server, ['--package', 'pkg', 'add', 'email']);
 
-    server.handle('DELETE', '/api/packages/pkg/uploaders/email',
+    await server.handle('POST', '/api/packages/pkg/uploaders',
         (request) => new shelf.Response.ok("{not json"));
 
-    pub.stderr.expect(emitsLines('Invalid server response:\n'
-        '{not json'));
-    pub.shouldExit(1);
+    expect(
+        pub.stderr,
+        emitsLines('Invalid server response:\n'
+            '{not json'));
+    await pub.shouldExit(1);
+  });
+
+  test('remove provides invalid JSON', () async {
+    var server = await ShelfTestServer.start();
+    await d.credentialsFile(server, 'access token').create();
+    var pub =
+        await startPubUploader(server, ['--package', 'pkg', 'remove', 'email']);
+
+    await server.handle('DELETE', '/api/packages/pkg/uploaders/email',
+        (request) => new shelf.Response.ok("{not json"));
+
+    expect(
+        pub.stderr,
+        emitsLines('Invalid server response:\n'
+            '{not json'));
+    await pub.shouldExit(1);
   });
 }

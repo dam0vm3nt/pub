@@ -4,9 +4,9 @@
 
 import 'dart:convert';
 
-import 'package:scheduled_test/scheduled_test.dart';
-import 'package:scheduled_test/scheduled_server.dart';
 import 'package:shelf/shelf.dart' as shelf;
+import 'package:shelf_test_handler/shelf_test_handler.dart';
+import 'package:test/test.dart';
 
 import '../descriptor.dart' as d;
 import '../test_pub.dart';
@@ -15,22 +15,22 @@ import 'utils.dart';
 main() {
   setUp(d.validPackage.create);
 
-  integration('package creation provides an error', () {
-    var server = new ScheduledServer();
-    d.credentialsFile(server, 'access token').create();
-    var pub = startPublish(server);
+  test('package creation provides an error', () async {
+    var server = await ShelfTestServer.start();
+    await d.credentialsFile(server, 'access token').create();
+    var pub = await startPublish(server);
 
-    confirmPublish(pub);
-    handleUploadForm(server);
-    handleUpload(server);
+    await confirmPublish(pub);
+    await handleUploadForm(server);
+    await handleUpload(server);
 
-    server.handle('GET', '/create', (request) {
+    await server.handle('GET', '/create', (request) {
       return new shelf.Response.notFound(JSON.encode({
         'error': {'message': 'Your package was too boring.'}
       }));
     });
 
-    pub.stderr.expect('Your package was too boring.');
-    pub.shouldExit(1);
+    expect(pub.stderr, emits('Your package was too boring.'));
+    await pub.shouldExit(1);
   });
 }

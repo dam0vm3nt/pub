@@ -4,13 +4,14 @@
 
 import 'dart:convert';
 
-import 'package:pub/src/io.dart';
-import 'package:scheduled_test/scheduled_test.dart';
-import 'package:scheduled_test/scheduled_server.dart';
 import 'package:shelf/shelf.dart' as shelf;
+import 'package:shelf_test_handler/shelf_test_handler.dart';
+import 'package:test/test.dart';
 
-void handleUploadForm(ScheduledServer server, [Map body]) {
-  server.handle('GET', '/api/packages/versions/new', (request) {
+import 'package:pub/src/io.dart';
+
+Future handleUploadForm(ShelfTestServer server, [Map body]) {
+  return server.handle('GET', '/api/packages/versions/new', (request) {
     return server.url.then((url) {
       expect(request.headers,
           containsPair('authorization', 'Bearer access token'));
@@ -28,8 +29,8 @@ void handleUploadForm(ScheduledServer server, [Map body]) {
   });
 }
 
-void handleUpload(ScheduledServer server) {
-  server.handle('POST', '/upload', (request) {
+Future handleUpload(ShelfTestServer server) {
+  return server.handle('POST', '/upload', (request) {
     // TODO(nweiz): Once a multipart/form-data parser in Dart exists, validate
     // that the request body is correctly formatted. See issue 6952.
     return drainStream(request.read())

@@ -2,14 +2,14 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:scheduled_test/scheduled_test.dart';
+import 'package:test/test.dart';
 
 import '../descriptor.dart' as d;
 import '../test_pub.dart';
 
 main() {
-  integration("includes Dart files in debug mode", () {
-    d.dir(appPath, [
+  test("includes Dart files in debug mode", () async {
+    await d.dir(appPath, [
       d.appPubspec(),
       d.dir('web', [
         d.file('file1.dart', 'var main = () => print("hello");'),
@@ -19,12 +19,12 @@ main() {
       ])
     ]).create();
 
-    pubGet();
-    schedulePub(
+    await pubGet();
+    await runPub(
         args: ["build", "--mode", "debug"],
         output: new RegExp(r'Built \d+ files to "build".'));
 
-    d.dir(appPath, [
+    await d.dir(appPath, [
       d.dir('build', [
         d.dir('web', [
           d.nothing('file1.dart.js'),
