@@ -14,13 +14,13 @@ import 'package:path/path.dart' as p;
 
 import '../dart.dart';
 import '../io.dart';
-import 'module.dart';
+import 'errors.dart';
 import 'module_reader.dart';
 import 'scratch_space.dart';
 import 'summaries.dart';
 import 'workers.dart';
 
-// JavaScript snippet to determine the directory a script was run from.
+/// JavaScript snippet to determine the directory a script was run from.
 final _currentDirectoryScript = r'''
 var _currentDirectory = (function () {
   var _url;
@@ -80,10 +80,7 @@ Future<bool> isAppEntryPoint(
 /// Synchronously returns a `Map<AssetId, Future<Asset>>` so that you can know
 /// immediately what assets will be output.
 Map<AssetId, Future<Asset>> bootstrapDartDevcEntrypoint(
-    AssetId dartEntrypointId,
-    BarbackMode mode,
-    ModuleReader moduleReader,
-    Future<Asset> getAsset(AssetId id)) {
+    AssetId dartEntrypointId, BarbackMode mode, ModuleReader moduleReader) {
   var bootstrapId = dartEntrypointId.addExtension('.bootstrap.js');
   var jsEntrypointId = dartEntrypointId.addExtension('.js');
   var jsMapEntrypointId = jsEntrypointId.addExtension('.map');
@@ -92,15 +89,14 @@ Map<AssetId, Future<Asset>> bootstrapDartDevcEntrypoint(
     bootstrapId: new Completer(),
     jsEntrypointId: new Completer(),
   };
-  var debugMode = mode == BarbackMode.DEBUG;
+  var isDebug = mode == BarbackMode.DEBUG;
 
-  if (debugMode) {
+  if (isDebug) {
     outputCompleters[jsMapEntrypointId] = new Completer<Asset>();
   }
 
   return _ensureComplete(outputCompleters, () async {
     var module = await moduleReader.moduleFor(dartEntrypointId);
-    if (module == null) return;
 
     // The path to the entrypoint JS module as it should appear in the call to
     // `require` in the bootstrap file.
@@ -127,10 +123,7 @@ Map<AssetId, Future<Asset>> bootstrapDartDevcEntrypoint(
     // Map from module name to module path.
     // Modules outside of the `packages` directory have different module path
     // and module names.
-    var modulePaths = new Map<String, String>();
-    modulePaths[appModulePath] = appModulePath;
-    modulePaths['dart_sdk'] = 'dart_sdk';
-
+    var modulePaths = {appModulePath: appModulePath, 'dart_sdk': 'dart_sdk'};
     var transitiveDeps = await moduleReader.readTransitiveDeps(module);
     for (var dep in transitiveDeps) {
       if (dep.dir != 'lib') {
@@ -148,7 +141,7 @@ Map<AssetId, Future<Asset>> bootstrapDartDevcEntrypoint(
       }
     }
     var bootstrapContent = new StringBuffer('(function() {\n');
-    if (debugMode) {
+    if (isDebug) {
       bootstrapContent.write('''
 $_currentDirectoryScript
 let modulePaths = ${const JsonEncoder.withIndent(" ").convert(modulePaths)};
@@ -177,7 +170,7 @@ for (let moduleName of Object.getOwnPropertyNames(modulePaths)) {
 }
 ''');
     } else {
-      var customModulePaths = new Map<String, String>();
+      var customModulePaths = <String, String>{};
       modulePaths.forEach((name, path) {
         if (name != path) customModulePaths[name] = path;
       });
@@ -186,6 +179,24 @@ for (let moduleName of Object.getOwnPropertyNames(modulePaths)) {
     }
 
     bootstrapContent.write('''
+// Whenever we fail to load a JS module, try to request the corresponding
+// `.errors` file, and log it to the console.
+(function() {
+  var oldOnError = requirejs.onError;
+  requirejs.onError = function(e) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        console.error(this.responseText);
+      }
+    };
+    xhr.open("GET", e.originalError.srcElement.src + ".errors", true);
+    xhr.send();
+    // Also handle errors the normal way.
+    if (oldOnError) oldOnError(e);
+  };
+}());
+
 require.config({
     waitSeconds: 30,
     paths: customModulePaths
@@ -195,7 +206,7 @@ require(["$appModulePath", "dart_sdk"], function(app, dart_sdk) {
   dart_sdk._isolate_helper.startRootIsolate(() => {}, []);
 ''');
 
-    if (debugMode) {
+    if (isDebug) {
       bootstrapContent.write('''
   dart_sdk._debugger.registerDevtoolsFormatter();
 
@@ -226,7 +237,7 @@ require(["$appModulePath", "dart_sdk"], function(app, dart_sdk) {
     var entrypointJsContent = new StringBuffer('''
 var el;
 ''');
-    if (debugMode) {
+    if (isDebug) {
       entrypointJsContent.write('''
 el = document.createElement("script");
 el.defer = true;
@@ -247,7 +258,7 @@ document.head.appendChild(el);
     outputCompleters[jsEntrypointId].complete(
         new Asset.fromString(jsEntrypointId, entrypointJsContent.toString()));
 
-    if (debugMode) {
+    if (isDebug) {
       outputCompleters[jsMapEntrypointId].complete(new Asset.fromString(
           jsMapEntrypointId,
           '{"version":3,"sourceRoot":"","sources":[],"names":[],"mappings":"",'
@@ -266,20 +277,18 @@ Map<AssetId, Future<Asset>> createDartdevcModule(
     ModuleReader moduleReader,
     ScratchSpace scratchSpace,
     Map<String, String> environmentConstants,
-    BarbackMode mode,
-    logError(String message)) {
+    BarbackMode mode) {
   assert(id.extension == '.js');
   var outputCompleters = <AssetId, Completer<Asset>>{
     id: new Completer(),
   };
-  var debugMode = mode == BarbackMode.DEBUG;
-  if (debugMode) {
+  var isDebug = mode == BarbackMode.DEBUG;
+  if (isDebug) {
     outputCompleters[id.addExtension('.map')] = new Completer();
   }
 
   return _ensureComplete(outputCompleters, () async {
     var module = await moduleReader.moduleFor(id);
-    if (module == null) return;
     var transitiveModuleDeps = await moduleReader.readTransitiveDeps(module);
     var linkedSummaryIds =
         transitiveModuleDeps.map((depId) => depId.linkedSummaryId).toSet();
@@ -305,7 +314,7 @@ Map<AssetId, Future<Asset>> createDartdevcModule(
       jsOutputFile.path,
     ]);
 
-    if (debugMode) {
+    if (isDebug) {
       request.arguments.addAll([
         '--source-map',
         '--source-map-comment',
@@ -350,12 +359,12 @@ Map<AssetId, Future<Asset>> createDartdevcModule(
     // status code if something failed. Today we just make sure there is an output
     // JS file to verify it was successful.
     if (response.exitCode != EXIT_CODE_OK || !jsOutputFile.existsSync()) {
-      logError('Error compiling dartdevc module: ${module.id}.\n'
-          '${response.output}');
+      outputCompleters[module.id.jsId].completeError(
+          new DartDevcCompilationException(module.id.jsId, response.output));
     } else {
       outputCompleters[module.id.jsId].complete(
           new Asset.fromBytes(module.id.jsId, jsOutputFile.readAsBytesSync()));
-      if (debugMode) {
+      if (isDebug) {
         var sourceMapFile = scratchSpace.fileFor(module.id.jsSourceMapId);
         outputCompleters[module.id.jsSourceMapId].complete(new Asset.fromBytes(
             module.id.jsSourceMapId, sourceMapFile.readAsBytesSync()));

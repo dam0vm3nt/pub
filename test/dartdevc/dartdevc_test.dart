@@ -83,8 +83,20 @@ void main() {
     await pubServe(args: ['--compiler', 'dartdevc']);
     await requestShouldSucceed('dart_sdk.js', null);
     await requestShouldSucceed('require.js', null);
+    await requestShouldSucceed('dart_stack_trace_mapper.js', null);
+    await requestShouldSucceed('ddc_web_compiler.js', null);
+    await requestShould404('dart_sdk.js.map');
+    await requestShould404('require.js.map');
+    await requestShould404('dart_stack_trace_mapper.js.map');
+    await requestShould404('ddc_web_compiler.js.map');
     await requestShouldSucceed('subdir/dart_sdk.js', null);
     await requestShouldSucceed('subdir/require.js', null);
+    await requestShouldSucceed('subdir/dart_stack_trace_mapper.js', null);
+    await requestShouldSucceed('subdir/ddc_web_compiler.js', null);
+    await requestShould404('subdir/dart_sdk.js.map');
+    await requestShould404('subdir/require.js.map');
+    await requestShould404('subdir/dart_stack_trace_mapper.js.map');
+    await requestShould404('subdir/ddc_web_compiler.js.map');
     await endPubServe();
   });
 }
