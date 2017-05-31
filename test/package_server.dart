@@ -82,11 +82,11 @@ class PackageServer {
   /// which packages to serve.
   static Future<PackageServer> start(
       void callback(PackageServerBuilder builder)) async {
-    var contents = [];
-    var server = new PackageServer._(await DescriptorServer.start(contents));
-    contents
+    var descriptorServer = await DescriptorServer.start();
+    var server = new PackageServer._(descriptorServer);
+    descriptorServer.contents
       ..add(d.dir('api', [server._servedApiPackageDir]))
-      ..add(server._servedApiPackageDir);
+      ..add(server._servedPackageDir);
     server.add(callback);
     return server;
   }

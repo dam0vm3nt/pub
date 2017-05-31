@@ -116,7 +116,7 @@ Descriptor packagesDir(Map<String, String> packages) {
 /// versions are expected to be downloaded.
 ///
 /// If [port] is passed, it's used as the port number of the local hosted server
-/// that this cache represents.
+/// that this cache represents. It defaults to [globalServer.port].
 ///
 /// If [includePubspecs] is `true`, then pubspecs will be created for each
 /// package. Defaults to `false` so that the contents of pubspecs are not
@@ -143,10 +143,10 @@ Descriptor cacheDir(Map packages, {int port, bool includePubspecs: false}) {
 /// downloaded from the mock package server.
 ///
 /// If [port] is passed, it's used as the port number of the local hosted server
-/// that this cache represents.
+/// that this cache represents. It defaults to [globalServer.port].
 Descriptor hostedCache(Iterable<Descriptor> contents, {int port}) {
   return dir(cachePath, [
-    dir('hosted', [dir('localhost%58$port', contents)])
+    dir('hosted', [dir('localhost%58${port ?? globalServer.port}', contents)])
   ]);
 }
 

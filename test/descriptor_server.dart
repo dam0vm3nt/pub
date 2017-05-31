@@ -55,6 +55,10 @@ class DescriptorServer {
   /// The list of paths that have been requested from this server.
   final requestedPaths = <String>[];
 
+  final d.DirectoryDescriptor _baseDir;
+
+  List<d.Descriptor> get contents => _baseDir.contents;
+
   /// Creates an HTTP server to serve [contents] as static files.
   ///
   /// This server exists only for the duration of the pub run. Subsequent calls
@@ -68,14 +72,14 @@ class DescriptorServer {
       new DescriptorServer._errors(
           await shelf_io.IOServer.bind('localhost', 0));
 
-  DescriptorServer._(this._server, List<d.Descriptor> contents) {
-    var baseDir = d.dir("serve-dir", contents);
+  DescriptorServer._(this._server, Iterable<d.Descriptor> contents)
+      : _baseDir = d.dir("serve-dir", contents) {
     _server.mount((request) async {
       var path = p.posix.fromUri(request.url.path);
       requestedPaths.add(path);
 
       try {
-        var stream = await validateStream(baseDir.load(path));
+        var stream = await validateStream(_baseDir.load(path));
         return new shelf.Response.ok(stream);
       } catch (_) {
         return new shelf.Response.notFound('File "$path" not found.');
