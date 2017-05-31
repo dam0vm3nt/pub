@@ -24,7 +24,7 @@ main() {
     // dummy SDK version 0.1.2+3.
     await d.dir(cachePath, [
       d.dir('global_packages', [
-        d.dir('foo', [d.matcherFile('pubspec.lock', contains('1.1.0'))])
+        d.dir('foo', [d.file('pubspec.lock', contains('1.1.0'))])
       ])
     ]).validate();
   });

@@ -25,7 +25,7 @@ main() {
 
     // Clear the cache. We don't care about anything that was served during
     // the initial get.
-    globalServer.clearRequestedPaths();
+    globalServer.requestedPaths.clear();
 
     // Add "bar" to the dependencies.
     await d.appDir({"foo": "any", "bar": "any"}).create();

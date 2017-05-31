@@ -28,7 +28,7 @@ main() {
         ["arg1", "arg2"],
         environment: getEnvironment());
 
-    await expectLater(process.stdout, emits("ok [arg1, arg2]"));
+    expect(process.stdout, emits("ok [arg1, arg2]"));
     await process.shouldExit();
   });
 
@@ -48,7 +48,7 @@ main() {
         ["arg1", "arg2"],
         environment: getEnvironment());
 
-    await expectLater(process.stdout, emits("ok [arg1, arg2]"));
+    expect(process.stdout, emits("ok [arg1, arg2]"));
     await process.shouldExit();
   });
 }

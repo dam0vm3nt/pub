@@ -9,8 +9,8 @@ import '../test_pub.dart';
 
 main() {
   // Regression test for issue 23113
-  test('runs a named Dart application in a dependency', ()async {
-await     servePackages((builder) {
+  test('runs a named Dart application in a dependency', () async {
+    await servePackages((builder) {
       builder.serve('foo', '1.0.0', pubspec: {
         'name': 'foo',
         'version': '1.0.0'
@@ -19,22 +19,22 @@ await     servePackages((builder) {
       ]);
     });
 
-await     d.dir(appPath, [
+    await d.dir(appPath, [
       d.appPubspec({"foo": null})
     ]).create();
 
-await     pubGet();
+    await pubGet();
 
-    var pub = await  pubRun(args: ["foo:bar"]);
+    var pub = await pubRun(args: ["foo:bar"]);
     expect(pub.stdout, emits("foobar"));
-await     pub.shouldExit();
+    await pub.shouldExit();
 
-await     d.dir("foo", [
+    await d.dir("foo", [
       d.libPubspec("foo", "2.0.0"),
       d.dir("bin", [d.file("bar.dart", "main() => print('different');")])
     ]).create();
 
-await     d.dir(appPath, [
+    await d.dir(appPath, [
       d.pubspec({
         "name": "myapp",
         "dependencies": {
@@ -43,12 +43,10 @@ await     d.dir(appPath, [
       })
     ]).create();
 
-await 
-    pubGet();
+    await pubGet();
 
-await 
-    pub = pubRun(args: ["foo:bar"]);
+    pub = await pubRun(args: ["foo:bar"]);
     expect(pub.stdout, emits("different"));
-await     pub.shouldExit();
+    await pub.shouldExit();
   });
 }

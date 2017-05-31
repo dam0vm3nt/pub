@@ -39,19 +39,19 @@ main() async {
 
     var pub = await pubRun(global: true, args: ["foo:script"]);
 
-    await expectLater(pub.stdout, emits("null"));
+    expect(pub.stdout, emits("null"));
 
     var packageConfigPath =
         p.join(d.sandbox, cachePath, "global_packages/foo/.packages");
-    await expectLater(pub.stdout, emits(p.toUri(packageConfigPath).toString()));
+    expect(pub.stdout, emits(p.toUri(packageConfigPath).toString()));
 
     var fooResourcePath = p.join(
         globalPackageServer.pathInCache('foo', '1.0.0'), "lib/resource.txt");
-    await expectLater(pub.stdout, emits(p.toUri(fooResourcePath).toString()));
+    expect(pub.stdout, emits(p.toUri(fooResourcePath).toString()));
 
     var barResourcePath = p.join(
         globalPackageServer.pathInCache('bar', '1.0.0'), "lib/resource.txt");
-    await expectLater(pub.stdout, emits(p.toUri(barResourcePath).toString()));
+    expect(pub.stdout, emits(p.toUri(barResourcePath).toString()));
     await pub.shouldExit(0);
   });
 
@@ -85,16 +85,16 @@ main() async {
 
     var pub = await pubRun(global: true, args: ["myapp:script"]);
 
-    await expectLater(pub.stdout, emits("null"));
+    expect(pub.stdout, emits("null"));
 
     var packageConfigPath = p.join(d.sandbox, "myapp/.packages");
-    await expectLater(pub.stdout, emits(p.toUri(packageConfigPath).toString()));
+    expect(pub.stdout, emits(p.toUri(packageConfigPath).toString()));
 
     var myappResourcePath = p.join(d.sandbox, "myapp/lib/resource.txt");
-    await expectLater(pub.stdout, emits(p.toUri(myappResourcePath).toString()));
+    expect(pub.stdout, emits(p.toUri(myappResourcePath).toString()));
 
     var fooResourcePath = p.join(d.sandbox, "foo/lib/resource.txt");
-    await expectLater(pub.stdout, emits(p.toUri(fooResourcePath).toString()));
+    expect(pub.stdout, emits(p.toUri(fooResourcePath).toString()));
     await pub.shouldExit(0);
   });
 
@@ -156,14 +156,14 @@ main() async {
 
     var pub = await pubRun(global: true, args: ["myapp:script"]);
 
-    await expectLater(pub.stdout,
+    expect(pub.stdout,
         emits(allOf(startsWith("http://localhost:"), endsWith("/packages/"))));
-    await expectLater(pub.stdout, emits("null"));
-    await expectLater(
+    expect(pub.stdout, emits("null"));
+    expect(
         pub.stdout,
         emits(allOf(startsWith("http://localhost:"),
             endsWith("/packages/myapp/resource.txt"))));
-    await expectLater(
+    expect(
         pub.stdout,
         emits(allOf(startsWith("http://localhost:"),
             endsWith("/packages/foo/resource.txt"))));

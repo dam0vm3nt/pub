@@ -25,14 +25,14 @@ main() {
     // Set up a cache with some broken packages.
     await d.dir(cachePath, [
       d.dir('hosted', [
-        d.async(globalServer.port.then((p) => d.dir('localhost%58$p', [
-              d.dir("foo-1.2.3",
-                  [d.libPubspec("foo", "1.2.3"), d.file("broken.txt")]),
-              d.dir("foo-1.2.5",
-                  [d.libPubspec("foo", "1.2.5"), d.file("broken.txt")]),
-              d.dir("bar-1.2.4",
-                  [d.libPubspec("bar", "1.2.4"), d.file("broken.txt")])
-            ])))
+        d.dir('localhost%58${globalServer.port}', [
+          d.dir("foo-1.2.3",
+              [d.libPubspec("foo", "1.2.3"), d.file("broken.txt")]),
+          d.dir("foo-1.2.5",
+              [d.libPubspec("foo", "1.2.5"), d.file("broken.txt")]),
+          d.dir(
+              "bar-1.2.4", [d.libPubspec("bar", "1.2.4"), d.file("broken.txt")])
+        ])
       ])
     ]).create();
 
@@ -64,11 +64,11 @@ main() {
     // Set up a cache with some broken packages.
     await d.dir(cachePath, [
       d.dir('hosted', [
-        d.async(globalServer.port.then((p) => d.dir('localhost%58$p', [
-              d.dir("bar-1.2.4", [d.file("broken.txt")]),
-              d.dir("foo-1.2.3", [d.file("broken.txt")]),
-              d.dir("foo-1.2.5", [d.file("broken.txt")]),
-            ])))
+        d.dir('localhost%58${globalServer.port}', [
+          d.dir("bar-1.2.4", [d.file("broken.txt")]),
+          d.dir("foo-1.2.3", [d.file("broken.txt")]),
+          d.dir("foo-1.2.5", [d.file("broken.txt")]),
+        ])
       ])
     ]).create();
 
@@ -100,11 +100,11 @@ main() {
     // Set up a cache with some broken packages.
     await d.dir(cachePath, [
       d.dir('hosted', [
-        d.async(globalServer.port.then((p) => d.dir('localhost%58$p', [
-              d.dir("bar-1.2.4", [d.file("pubspec.yaml", "{")]),
-              d.dir("foo-1.2.3", [d.file("pubspec.yaml", "{")]),
-              d.dir("foo-1.2.5", [d.file("pubspec.yaml", "{")]),
-            ])))
+        d.dir('localhost%58${globalServer.port}', [
+          d.dir("bar-1.2.4", [d.file("pubspec.yaml", "{")]),
+          d.dir("foo-1.2.3", [d.file("pubspec.yaml", "{")]),
+          d.dir("foo-1.2.5", [d.file("pubspec.yaml", "{")]),
+        ])
       ])
     ]).create();
 

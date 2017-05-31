@@ -34,17 +34,16 @@ main() {
     // Repair them.
     var pub = await startPub(args: ["cache", "repair"]);
 
-    await expectLater(pub.stdout, emits("Downloading foo 1.2.3..."));
-    await expectLater(pub.stdout, emits("Downloading foo 1.2.4..."));
-    await expectLater(pub.stdout, emits("Downloading foo 1.2.5..."));
+    expect(pub.stdout, emits("Downloading foo 1.2.3..."));
+    expect(pub.stdout, emits("Downloading foo 1.2.4..."));
+    expect(pub.stdout, emits("Downloading foo 1.2.5..."));
 
-    await expectLater(
-        pub.stderr, emits(startsWith("Failed to repair foo 1.2.4. Error:")));
-    await expectLater(pub.stderr, emits("HTTP error 404: Not Found"));
+    expect(pub.stderr, emits(startsWith("Failed to repair foo 1.2.4. Error:")));
+    expect(pub.stderr, emits("HTTP error 404: Not Found"));
 
-    await expectLater(pub.stdout, emits("Reinstalled 2 packages."));
-    await expectLater(pub.stdout, emits("Failed to reinstall 1 package:"));
-    await expectLater(pub.stdout, emits("- foo 1.2.4"));
+    expect(pub.stdout, emits("Reinstalled 2 packages."));
+    expect(pub.stdout, emits("Failed to reinstall 1 package:"));
+    expect(pub.stdout, emits("- foo 1.2.4"));
 
     await pub.shouldExit(exit_codes.UNAVAILABLE);
   });

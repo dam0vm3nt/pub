@@ -64,21 +64,21 @@ void main() => other.main();
     await d.dir(appPath, [
       d.dir('build', [
         d.dir('web', [
-          d.matcherFile('main.dart.js', isNot(isEmpty)),
-          d.matcherFile('main.dart.bootstrap.js', isNot(isEmpty)),
-          d.matcherFile('dart_sdk.js', isNot(isEmpty)),
-          d.matcherFile('require.js', isNot(isEmpty)),
-          d.matcherFile('web__main.js', isNot(isEmpty)),
-          d.matcherFile('dart_stack_trace_mapper.js', isNot(isEmpty)),
-          d.matcherFile('ddc_web_compiler.js', isNot(isEmpty)),
+          d.file('main.dart.js', isNot(isEmpty)),
+          d.file('main.dart.bootstrap.js', isNot(isEmpty)),
+          d.file('dart_sdk.js', isNot(isEmpty)),
+          d.file('require.js', isNot(isEmpty)),
+          d.file('web__main.js', isNot(isEmpty)),
+          d.file('dart_stack_trace_mapper.js', isNot(isEmpty)),
+          d.file('ddc_web_compiler.js', isNot(isEmpty)),
           d.dir('packages', [
-            d.dir('foo', [d.matcherFile('lib__foo.js', isNot(isEmpty))]),
-            d.dir(appPath, [d.matcherFile('lib__hello.js', isNot(isEmpty))]),
+            d.dir('foo', [d.file('lib__foo.js', isNot(isEmpty))]),
+            d.dir(appPath, [d.file('lib__hello.js', isNot(isEmpty))]),
           ]),
-          d.matcherFile('web__subdir__subfile.js', isNot(isEmpty)),
+          d.file('web__subdir__subfile.js', isNot(isEmpty)),
           d.dir('subdir', [
-            d.matcherFile('subfile.dart.js', isNot(isEmpty)),
-            d.matcherFile(
+            d.file('subfile.dart.js', isNot(isEmpty)),
+            d.file(
                 'subfile.dart.bootstrap.js',
                 allOf(
                   contains('"web/web__main": '
@@ -86,10 +86,10 @@ void main() => other.main();
                   contains(
                       '"packages/foo/lib__foo": "../packages/foo/lib__foo"'),
                 )),
-            d.matcherFile('dart_sdk.js', isNot(isEmpty)),
-            d.matcherFile('require.js', isNot(isEmpty)),
-            d.matcherFile('dart_stack_trace_mapper.js', isNot(isEmpty)),
-            d.matcherFile('ddc_web_compiler.js', isNot(isEmpty)),
+            d.file('dart_sdk.js', isNot(isEmpty)),
+            d.file('require.js', isNot(isEmpty)),
+            d.file('dart_stack_trace_mapper.js', isNot(isEmpty)),
+            d.file('ddc_web_compiler.js', isNot(isEmpty)),
           ]),
         ]),
       ]),

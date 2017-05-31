@@ -28,14 +28,14 @@ main() {
     var pub = await pubRun(global: true, args: ["foo:script"]);
     // In the real world this would just print "hello!", but since we collect
     // all output we see the precompilation messages as well.
-    await expectLater(pub.stdout, emits("Precompiling executables..."));
-    await expectLater(pub.stdout, emitsThrough("ok"));
+    expect(pub.stdout, emits("Precompiling executables..."));
+    expect(pub.stdout, emitsThrough("ok"));
     await pub.shouldExit();
 
     await d.dir(cachePath, [
       d.dir('global_packages', [
         d.dir('foo', [
-          d.dir('bin', [d.matcherFile('script.dart.snapshot', contains('ok'))])
+          d.dir('bin', [d.file('script.dart.snapshot', contains('ok'))])
         ])
       ])
     ]).validate();

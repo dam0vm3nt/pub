@@ -31,18 +31,17 @@ main() {
     await d.dir(appPath, [
       d.dir("build", [
         d.dir("web", [
-          d.matcherFile("main.dart.js.map",
+          d.file("main.dart.js.map",
               contains(r"packages/$sdk/lib/core/duration.dart")),
           d.dir("sub", [
-            d.matcherFile("main.dart.js.map",
+            d.file("main.dart.js.map",
                 contains(r"../packages/$sdk/lib/core/duration.dart"))
           ]),
           d.dir("packages", [
             d.dir(r"$sdk", [
               d.dir("lib", [
-                d.dir(r"core", [
-                  d.matcherFile("duration.dart", contains("class Duration"))
-                ])
+                d.dir(r"core",
+                    [d.file("duration.dart", contains("class Duration"))])
               ])
             ])
           ])

@@ -20,10 +20,8 @@ main() {
 
     await d.dir(cachePath, [
       d.dir('global_packages', [
-        d.dir('foo', [
-          d.matcherFile('pubspec.lock', contains('1.0.0')),
-          d.nothing('bin')
-        ])
+        d.dir('foo',
+            [d.file('pubspec.lock', contains('1.0.0')), d.nothing('bin')])
       ])
     ]).validate();
   });

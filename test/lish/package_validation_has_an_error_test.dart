@@ -18,7 +18,7 @@ main() {
     pkg.remove("homepage");
     await d.dir(appPath, [d.pubspec(pkg)]).create();
 
-    var server = await ShelfTestServer.start();
+    var server = await ShelfTestServer.create();
     var pub = await startPublish(server);
 
     await pub.shouldExit(exit_codes.DATA);

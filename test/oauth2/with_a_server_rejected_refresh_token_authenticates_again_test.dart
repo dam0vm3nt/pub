@@ -6,7 +6,7 @@ import 'dart:convert';
 
 import 'package:pub/src/io.dart';
 import 'package:shelf/shelf.dart' as shelf;
-import 'package:shelf_test_handler/shelf_test_handler';
+import 'package:shelf_test_handler/shelf_test_handler.dart';
 import 'package:test/test.dart';
 
 import '../descriptor.dart' as d;
@@ -20,7 +20,7 @@ main() {
       'saves credentials.json', () async {
     await d.validPackage.create();
 
-    var server = await ShelfTestServer.start();
+    var server = await ShelfTestServer.create();
     await d
         .credentialsFile(server, 'access token',
             refreshToken: 'bad refresh token',
@@ -31,7 +31,7 @@ main() {
 
     await confirmPublish(pub);
 
-    await server.handle('POST', '/token', (request) {
+    server.handler.expect('POST', '/token', (request) {
       return drainStream(request.read()).then((_) {
         return new shelf.Response(400,
             body: JSON.encode({"error": "invalid_request"}),
@@ -42,7 +42,7 @@ main() {
     await expectLater(pub.stdout, emits(startsWith('Uploading...')));
     await authorizePub(pub, server, 'new access token');
 
-    await server.handle('GET', '/api/packages/versions/new', (request) {
+    server.handler.expect('GET', '/api/packages/versions/new', (request) {
       expect(request.headers,
           containsPair('authorization', 'Bearer new access token'));
 

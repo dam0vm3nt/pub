@@ -27,7 +27,7 @@ class GitRepoDescriptor extends DirectoryDescriptor {
   /// Writes this descriptor to the filesystem, then commits any changes from
   /// the previous structure to the Git repo.
   ///
-  /// [parent] defaults to [defaultRoot].
+  /// [parent] defaults to [sandbox].
   Future commit([String parent]) async {
     await super.create(parent);
     await _runGitCommands(parent, [
@@ -39,7 +39,7 @@ class GitRepoDescriptor extends DirectoryDescriptor {
   /// Return a Future that completes to the commit in the git repository
   /// referred to by [ref].
   ///
-  /// [parent] defaults to [defaultRoot].
+  /// [parent] defaults to [sandbox].
   Future<String> revParse(String ref, [String parent]) async {
     var output = await _runGit(['rev-parse', ref], parent);
     return output[0];
@@ -47,7 +47,7 @@ class GitRepoDescriptor extends DirectoryDescriptor {
 
   /// Runs a Git command in this repository.
   ///
-  /// [parent] defaults to [defaultRoot].
+  /// [parent] defaults to [sandbox].
   Future runGit(List<String> args, [String parent]) => _runGit(args, parent);
 
   Future<List<String>> _runGit(List<String> args, String parent) {

@@ -5,8 +5,8 @@
 import 'dart:convert';
 
 import 'package:shelf/shelf.dart' as shelf;
-import 'package:shelf_test_handler/shelf_test_handler';
-import 'package:test/server.dart';
+import 'package:shelf_test_handler/shelf_test_handler.dart';
+import 'package:test/test.dart';
 
 import '../descriptor.dart' as d;
 import '../test_pub.dart';
@@ -16,13 +16,13 @@ main() {
       'with server-rejected credentials, authenticates again and saves '
       'credentials.json', () async {
     await d.validPackage.create();
-    var server = await ShelfTestServer.start();
+    var server = await ShelfTestServer.create();
     await d.credentialsFile(server, 'access token').create();
     var pub = await startPublish(server);
 
     await confirmPublish(pub);
 
-    await server.handle('GET', '/api/packages/versions/new', (request) {
+    server.handler.expect('GET', '/api/packages/versions/new', (request) {
       return new shelf.Response(401,
           body: JSON.encode({
             'error': {'message': 'your token sucks'}

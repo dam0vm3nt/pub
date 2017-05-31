@@ -18,7 +18,7 @@ main() {
 
     // Clear the cache. We don't care about anything that was served during
     // the initial get.
-    globalServer.clearRequestedPaths();
+    globalServer.requestedPaths.clear();
 
     await d.cacheDir({"foo": "1.2.3"}).validate();
     await d.appPackagesFile({"foo": "1.2.3"}).validate();

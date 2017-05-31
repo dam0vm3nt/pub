@@ -15,6 +15,7 @@ import 'package:pub/src/package.dart';
 import 'package:pub/src/package_graph.dart';
 import 'package:pub/src/system_cache.dart';
 
+import '../descriptor.dart' as d;
 import '../test_pub.dart';
 
 /// Expects that [DependencyComputer.transformersNeededByTransformers] will

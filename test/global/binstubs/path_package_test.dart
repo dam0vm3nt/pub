@@ -22,9 +22,8 @@ main() {
         output: contains("Installed executable foo."));
 
     await d.dir(cachePath, [
-      d.dir("bin", [
-        d.matcherFile(binStubName("foo"), contains("pub global run foo:foo"))
-      ])
+      d.dir("bin",
+          [d.file(binStubName("foo"), contains("pub global run foo:foo"))])
     ]).validate();
   });
 }

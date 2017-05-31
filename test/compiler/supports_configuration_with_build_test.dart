@@ -78,7 +78,7 @@ main() {
     await d.dir(appPath, [
       d.dir('build', [
         d.dir('web', [
-          d.matcherFile('file.dart.js', isMinifiedDart2JSOutput),
+          d.file('file.dart.js', isMinifiedDart2JSOutput),
           d.dir('packages', [
             d.dir('browser', [
               d.file('dart.js', 'contents of dart.js'),

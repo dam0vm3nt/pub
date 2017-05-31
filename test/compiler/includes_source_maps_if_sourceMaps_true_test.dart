@@ -30,9 +30,9 @@ main() {
     await d.dir(appPath, [
       d.dir('build', [
         d.dir('web', [
-          d.matcherFile(
+          d.file(
               'main.dart.js', contains("# sourceMappingURL=main.dart.js.map")),
-          d.matcherFile('main.dart.js.map', contains('"file": "main.dart.js"'))
+          d.file('main.dart.js.map', contains('"file": "main.dart.js"'))
         ])
       ])
     ]).validate();

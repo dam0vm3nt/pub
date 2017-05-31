@@ -24,14 +24,14 @@ main() {
     test('has a non-primary readme with invalid utf-8', () async {
       await d.dir(appPath, [
         d.file("README", "Valid utf-8"),
-        d.binaryFile("README.invalid", [192])
+        d.file("README.invalid", [192])
       ]).create();
       expectNoValidationError(utf8Readme);
     });
 
     test('has a .gitignored README with invalid utf-8', () async {
       var repo = d.git(appPath, [
-        d.binaryFile("README", [192]),
+        d.file("README", [192]),
         d.file(".gitignore", "README")
       ]);
       await d.validPackage.create();
@@ -46,7 +46,7 @@ main() {
     await d.validPackage.create();
 
     await d.dir(appPath, [
-      d.binaryFile("README", [192])
+      d.file("README", [192])
     ]).create();
     expectValidationWarning(utf8Readme);
   });

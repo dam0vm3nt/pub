@@ -73,7 +73,7 @@ main() {
     await pubGet();
     var process = await startPubServe(args: ['--compiler', 'invalid']);
     await process.shouldExit(USAGE);
-    await expectLater(
+    expect(
         process.stderr,
         emitsThrough(
             '"invalid" is not an allowed value for option "compiler".'));
@@ -94,7 +94,7 @@ main() {
     for (var args in argCombos) {
       var process = await startPubServe(args: args);
       await process.shouldExit(USAGE);
-      await expectLater(
+      expect(
           process.stderr,
           emitsThrough(
               "The --dart2js flag can't be used with the --compiler arg. Prefer "

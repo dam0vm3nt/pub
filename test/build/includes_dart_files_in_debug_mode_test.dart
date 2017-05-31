@@ -28,13 +28,13 @@ main() {
       d.dir('build', [
         d.dir('web', [
           d.nothing('file1.dart.js'),
-          d.matcherFile('file1.dart', isNot(isEmpty)),
+          d.file('file1.dart', isNot(isEmpty)),
           d.nothing('file2.dart.js'),
-          d.matcherFile('file2.dart', isNot(isEmpty)),
+          d.file('file2.dart', isNot(isEmpty)),
           d.nothing('file3.dart.js'),
-          d.matcherFile('file3.dart', isNot(isEmpty)),
+          d.file('file3.dart', isNot(isEmpty)),
           d.nothing('file4.dart.js'),
-          d.matcherFile('file4.dart', isNot(isEmpty))
+          d.file('file4.dart', isNot(isEmpty))
         ])
       ])
     ]).validate();

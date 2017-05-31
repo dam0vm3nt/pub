@@ -23,7 +23,7 @@ main() {
 
     var pub = await pubRun(global: true, args: ["foo"]);
     var path = canonicalize(p.join(d.sandbox, "foo"));
-    await expectLater(pub.stderr,
+    expect(pub.stderr,
         emits('Could not find a file named "pubspec.yaml" in "$path".'));
     await pub.shouldExit(1);
   });

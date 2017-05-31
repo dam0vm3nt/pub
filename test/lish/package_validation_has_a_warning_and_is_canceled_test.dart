@@ -5,6 +5,8 @@
 import 'package:shelf_test_handler/shelf_test_handler.dart';
 import 'package:test/test.dart';
 
+import 'package:pub/src/exit_codes.dart' as exit_codes;
+
 import '../descriptor.dart' as d;
 import '../test_pub.dart';
 
@@ -16,10 +18,10 @@ main() {
     pkg["author"] = "Natalie Weizenbaum";
     await d.dir(appPath, [d.pubspec(pkg)]).create();
 
-    var server = await ShelfTestServer.start();
+    var server = await ShelfTestServer.create();
     var pub = await startPublish(server);
 
-    await pub.writeLine("n");
+    pub.stdin.writeln("n");
     await pub.shouldExit(exit_codes.DATA);
     expect(pub.stderr, emitsThrough("Package upload canceled."));
   });

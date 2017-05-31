@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import 'package:shelf_test_handler/shelf_test_handler';
+import 'package:shelf_test_handler/shelf_test_handler.dart';
 import 'package:test/test.dart';
 
 import '../descriptor.dart' as d;
@@ -15,7 +15,7 @@ main() {
   setUp(d.validPackage.create);
 
   test('upload form url is not a string', () async {
-    var server = await ShelfTestServer.start();
+    var server = await ShelfTestServer.create();
     await d.credentialsFile(server, 'access token').create();
     var pub = await startPublish(server);
 
@@ -26,7 +26,7 @@ main() {
       'fields': {'field1': 'value1', 'field2': 'value2'}
     };
 
-    await handleUploadForm(server, body);
+    handleUploadForm(server, body);
     expect(pub.stderr, emits('Invalid server response:'));
     expect(pub.stderr, emits(JSON.encode(body)));
     await pub.shouldExit(1);

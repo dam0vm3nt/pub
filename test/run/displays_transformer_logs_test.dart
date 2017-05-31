@@ -69,19 +69,19 @@ main() {
     // Note that the info log is only displayed here because the test
     // harness runs pub in verbose mode. By default, only the warning would
     // be shown.
-    await expectLater(pub.stdout, emits("[Info from Logging]:"));
-    await expectLater(pub.stdout, emits("myapp|bin/script.dart."));
+    expect(pub.stdout, emits("[Info from Logging]:"));
+    expect(pub.stdout, emits("myapp|bin/script.dart."));
 
-    await expectLater(pub.stderr, emits("[Warning from Logging]:"));
-    await expectLater(pub.stderr, emits("myapp|bin/script.dart."));
+    expect(pub.stderr, emits("[Warning from Logging]:"));
+    expect(pub.stderr, emits("myapp|bin/script.dart."));
 
-    await expectLater(pub.stdout, emits("[Info from Logging]:"));
-    await expectLater(pub.stdout, emits("myapp|lib/lib.dart."));
+    expect(pub.stdout, emits("[Info from Logging]:"));
+    expect(pub.stdout, emits("myapp|lib/lib.dart."));
 
-    await expectLater(pub.stderr, emits("[Warning from Logging]:"));
-    await expectLater(pub.stderr, emits("myapp|lib/lib.dart."));
+    expect(pub.stderr, emits("[Warning from Logging]:"));
+    expect(pub.stderr, emits("myapp|lib/lib.dart."));
 
-    await expectLater(pub.stdout, emits("lib"));
+    expect(pub.stdout, emits("lib"));
     pub.shouldExit();
   });
 }

@@ -16,18 +16,19 @@ main() {
   setUp(d.validPackage.create);
 
   test("cloud storage upload doesn't redirect", () async {
-    var server = await ShelfTestServer.start();
+    var server = await ShelfTestServer.create();
     await d.credentialsFile(server, 'access token').create();
     var pub = await startPublish(server);
 
     await confirmPublish(pub);
-    await handleUploadForm(server);
+    handleUploadForm(server);
 
-    await server.handle('POST', '/upload', (request) {
-      return drainStream(request.read()).then((_) => new shelf.Response(200));
+    server.handler.expect('POST', '/upload', (request) async {
+      await drainStream(request.read());
+      return new shelf.Response(200);
     });
 
-    await pub.stderr.expect('Failed to upload the package.');
+    expect(pub.stderr, emits('Failed to upload the package.'));
     await pub.shouldExit(1);
   });
 }

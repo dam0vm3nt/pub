@@ -36,10 +36,10 @@ main() {
       var expectedFile;
       switch (compiler) {
         case Compiler.dart2JS:
-          expectedFile = d.matcherFile('file.dart.js', contains('fblthp'));
+          expectedFile = d.file('file.dart.js', contains('fblthp'));
           break;
         case Compiler.dartDevc:
-          expectedFile = d.matcherFile('web__file.js', contains('fblthp'));
+          expectedFile = d.file('web__file.js', contains('fblthp'));
           break;
       }
 

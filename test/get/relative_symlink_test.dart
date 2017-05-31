@@ -9,8 +9,6 @@
 @TestOn("!windows")
 import 'package:test/test.dart';
 
-import 'dart:io';
-
 import '../descriptor.dart' as d;
 import '../test_pub.dart';
 

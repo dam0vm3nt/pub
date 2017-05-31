@@ -24,7 +24,7 @@ main() {
     await pubGet(output: contains("Precompiled foo:hello."));
 
     await d.dir(p.join(appPath, '.pub', 'bin', 'foo'),
-        [d.matcherFile('hello.dart.snapshot', contains('Hello!'))]).validate();
+        [d.file('hello.dart.snapshot', contains('Hello!'))]).validate();
 
     await d.git('foo.git', [
       d.dir("bin", [d.file("hello.dart", "void main() => print('Goodbye!');")])
@@ -32,9 +32,8 @@ main() {
 
     await pubUpgrade(output: contains("Precompiled foo:hello."));
 
-    await d.dir(p.join(appPath, '.pub', 'bin', 'foo'), [
-      d.matcherFile('hello.dart.snapshot', contains('Goodbye!'))
-    ]).validate();
+    await d.dir(p.join(appPath, '.pub', 'bin', 'foo'),
+        [d.file('hello.dart.snapshot', contains('Goodbye!'))]).validate();
 
     var process = await pubRun(args: ['foo:hello']);
     expect(process.stdout, emits("Goodbye!"));

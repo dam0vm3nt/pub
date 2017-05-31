@@ -327,7 +327,7 @@ main() {
     ]).create();
 
     var pub = await pubRun(args: ["bin/script"]);
-    await expectLater(pub.stdout, emits("Modified!"));
+    expect(pub.stdout, emits("Modified!"));
     await pub.shouldExit();
   });
 
@@ -369,7 +369,7 @@ main() {
     ]).create();
 
     var pub = await pubRun(args: ["bin/script"]);
-    await expectLater(pub.stdout, emits("Hello!"));
+    expect(pub.stdout, emits("Hello!"));
     await pub.shouldExit();
   });
 
@@ -476,8 +476,7 @@ main() {
     await pubGet(output: contains("Precompiled foo"));
 
     await d.dir(appPath, [
-      d.matcherFile(
-          ".pub/deps/debug/foo/lib/inputs.txt", contains('hello.dart.copy'))
+      d.file(".pub/deps/debug/foo/lib/inputs.txt", contains('hello.dart.copy'))
     ]).validate();
 
     await pubServe();

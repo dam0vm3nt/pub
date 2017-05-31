@@ -11,8 +11,6 @@ import 'package:test_process/test_process.dart';
 import 'package:pub/src/exit_codes.dart' as exit_codes;
 import 'package:pub/src/sdk.dart' as sdk;
 
-import 'test_pub.dart';
-
 main() {
   // This test is a bit funny.
   //

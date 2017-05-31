@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
+
 import 'package:analyzer/src/summary/idl.dart';
 import 'package:test/test.dart';
 
@@ -149,7 +151,7 @@ Future linkedSummaryRequestShouldSucceed(String uri,
   expect(summaryDepPaths, unorderedMatches(expectedSummaryDeps));
 }
 
-void unlinkedSummaryRequestShouldSucceed(
+Future unlinkedSummaryRequestShouldSucceed(
     String uri, List<Matcher> expectedUnlinkedUris) async {
   var expected = unorderedMatches(expectedUnlinkedUris);
   var response = await requestFromPub(uri);

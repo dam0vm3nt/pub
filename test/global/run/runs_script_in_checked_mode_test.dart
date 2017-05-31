@@ -18,7 +18,7 @@ main() {
     await runPub(args: ["global", "activate", "foo"]);
 
     var pub = await pubRun(global: true, args: ["--checked", "foo:script"]);
-    await expectLater(pub.stderr,
+    expect(pub.stderr,
         emitsThrough(contains("'bool' is not a subtype of type 'int' of 'a'")));
     await pub.shouldExit(255);
   });

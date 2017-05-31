@@ -31,10 +31,10 @@ main() {
     await d.dir(cachePath, [
       d.dir('global_packages', [
         d.dir('foo', [
-          d.matcherFile('pubspec.lock', contains('1.0.0')),
+          d.file('pubspec.lock', contains('1.0.0')),
           d.dir('bin', [
-            d.matcherFile('hello.dart.snapshot', contains('hello!')),
-            d.matcherFile('goodbye.dart.snapshot', contains('goodbye!')),
+            d.file('hello.dart.snapshot', contains('hello!')),
+            d.file('goodbye.dart.snapshot', contains('goodbye!')),
             d.nothing('shell.sh.snapshot'),
             d.nothing('subdir')
           ])

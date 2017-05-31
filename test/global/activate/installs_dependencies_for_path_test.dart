@@ -20,16 +20,15 @@ main() {
     ]).create();
 
     var pub = await startPub(args: ["global", "activate", "-spath", "../foo"]);
-    await expectLater(pub.stdout, emitsThrough("Resolving dependencies..."));
-    await expectLater(pub.stdout, emitsThrough("Downloading bar 1.0.0..."));
-    await expectLater(pub.stdout, emitsThrough("Downloading baz 2.0.0..."));
-    await expectLater(
-        pub.stdout, emitsThrough(startsWith("Activated foo 0.0.0 at path")));
+    expect(pub.stdout, emitsThrough("Resolving dependencies..."));
+    expect(pub.stdout, emitsThrough("Downloading bar 1.0.0..."));
+    expect(pub.stdout, emitsThrough("Downloading baz 2.0.0..."));
+    expect(pub.stdout, emitsThrough(startsWith("Activated foo 0.0.0 at path")));
     await pub.shouldExit();
 
     // Puts the lockfile in the linked package itself.
     await d.dir("foo", [
-      d.matcherFile(
+      d.file(
           "pubspec.lock",
           allOf([
             contains("bar"),

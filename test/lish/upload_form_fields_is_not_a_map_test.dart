@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import 'package:shelf_test_handler/shelf_test_handler';
+import 'package:shelf_test_handler/shelf_test_handler.dart';
 import 'package:test/test.dart';
 
 import '../descriptor.dart' as d;
@@ -15,14 +15,14 @@ main() {
   setUp(d.validPackage.create);
 
   test('upload form fields is not a map', () async {
-    var server = await ShelfTestServer.start();
+    var server = await ShelfTestServer.create();
     await d.credentialsFile(server, 'access token').create();
     var pub = await startPublish(server);
 
     await confirmPublish(pub);
 
     var body = {'url': 'http://example.com/upload', 'fields': 12};
-    await handleUploadForm(server, body);
+    handleUploadForm(server, body);
     expect(pub.stderr, emits('Invalid server response:'));
     expect(pub.stderr, emits(JSON.encode(body)));
     await pub.shouldExit(1);

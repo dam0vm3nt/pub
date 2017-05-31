@@ -48,29 +48,29 @@ main() {
     await d.dir(appPath, [
       d.dir('build', [
         d.dir('benchmark', [
-          d.matcherFile('file.dart.js', isNot(isEmpty)),
+          d.file('file.dart.js', isNot(isEmpty)),
           d.nothing('file.dart'),
           d.nothing('lib.dart'),
           d.dir('subdir', [
-            d.matcherFile('subfile.dart.js', isNot(isEmpty)),
+            d.file('subfile.dart.js', isNot(isEmpty)),
             d.nothing('subfile.dart')
           ])
         ]),
         d.dir('foo', [
-          d.matcherFile('file.dart.js', isNot(isEmpty)),
+          d.file('file.dart.js', isNot(isEmpty)),
           d.nothing('file.dart'),
           d.nothing('lib.dart'),
           d.dir('subdir', [
-            d.matcherFile('subfile.dart.js', isNot(isEmpty)),
+            d.file('subfile.dart.js', isNot(isEmpty)),
             d.nothing('subfile.dart')
           ])
         ]),
         d.dir('web', [
-          d.matcherFile('file.dart.js', isNot(isEmpty)),
+          d.file('file.dart.js', isNot(isEmpty)),
           d.nothing('file.dart'),
           d.nothing('lib.dart'),
           d.dir('subdir', [
-            d.matcherFile('subfile.dart.js', isNot(isEmpty)),
+            d.file('subfile.dart.js', isNot(isEmpty)),
             d.nothing('subfile.dart')
           ])
         ])

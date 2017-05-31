@@ -18,11 +18,11 @@ main() {
     pkg.remove("homepage");
     await d.dir(appPath, [d.pubspec(pkg)]).create();
 
-    var server = await ShelfTestServer.start();
+    var server = await ShelfTestServer.create();
     var pub = await startPublish(server, args: ['--force']);
 
     await pub.shouldExit(exit_codes.DATA);
-    await expectLater(
+    expect(
         pub.stderr,
         emitsThrough("Sorry, your package is missing a "
             "requirement and can't be published yet."));

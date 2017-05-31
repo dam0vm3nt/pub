@@ -63,17 +63,17 @@ main() {
     switch (compiler) {
       case Compiler.dart2JS:
         expectedWebDir = d.dir("web", [
-          d.matcherFile(
+          d.file(
               "main.dart.js.map",
               // Note: we include the quotes to ensure this is the full URL path
               // in the source map
               contains(r'"packages/foo/foo.dart"')),
           d.dir("sub", [
-            d.matcherFile(
+            d.file(
                 "main2.dart.js.map", contains(r'"../packages/foo/foo.dart"')),
           ]),
           d.dir("packages", [
-            d.dir(r"foo", [d.matcherFile("foo.dart", contains("foo() {"))]),
+            d.dir(r"foo", [d.file("foo.dart", contains("foo() {"))]),
           ]),
         ]);
         break;
@@ -81,13 +81,12 @@ main() {
         expectedWebDir = d.dir("web", [
           d.dir("packages", [
             d.dir("foo", [
-              d.matcherFile("foo.dart", contains("foo() {")),
-              d.matcherFile('lib__foo.js', contains("foo.dart")),
+              d.file("foo.dart", contains("foo() {")),
+              d.file('lib__foo.js', contains("foo.dart")),
             ]),
           ]),
-          d.matcherFile("web__main.js.map", contains(r'"main.dart"')),
-          d.matcherFile(
-              "web__sub__main2.js.map", contains(r'"sub/main2.dart"')),
+          d.file("web__main.js.map", contains(r'"main.dart"')),
+          d.file("web__sub__main2.js.map", contains(r'"sub/main2.dart"')),
         ]);
 
         break;

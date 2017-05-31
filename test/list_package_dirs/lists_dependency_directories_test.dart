@@ -37,8 +37,8 @@ main() {
     ], outputJson: {
       "packages": {
         "foo": path.join(d.sandbox, "foo", "lib"),
-        "bar": globalServer.port.then((p) => path.join(d.sandbox, cachePath,
-            "hosted", "localhost%58$p", "bar-1.0.0", "lib")),
+        "bar": path.join(d.sandbox, cachePath, "hosted",
+            "localhost%58${globalServer.port}", "bar-1.0.0", "lib"),
         "myapp": canonicalize(path.join(d.sandbox, appPath, "lib"))
       },
       "input_files": [

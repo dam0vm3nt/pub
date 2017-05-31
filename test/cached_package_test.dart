@@ -10,7 +10,6 @@ import 'package:pub/src/package.dart';
 import 'package:pub/src/pubspec.dart';
 
 import 'descriptor.dart' as d;
-import 'test_pub.dart';
 
 main() {
   // Regression test for https://github.com/dart-lang/pub/issues/1586.
@@ -31,8 +30,8 @@ main() {
     ]).create();
 
     var cachedPackage = new CachedPackage(
-        new Package(new Pubspec('a'), p.join(d.defaultRoot, 'app')),
-        p.join(d.defaultRoot, 'cache', 'app'));
+        new Package(new Pubspec('a'), p.join(d.sandbox, 'app')),
+        p.join(d.sandbox, 'cache', 'app'));
 
     var paths = cachedPackage.listFiles(beneath: 'lib');
     expect(

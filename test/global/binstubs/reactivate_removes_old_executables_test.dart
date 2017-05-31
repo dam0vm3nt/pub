@@ -37,7 +37,7 @@ main() {
     await d.dir(cachePath, [
       d.dir("bin", [
         d.nothing(binStubName("one")),
-        d.matcherFile(binStubName("two"), contains("two"))
+        d.file(binStubName("two"), contains("two"))
       ])
     ]).validate();
   });

@@ -27,8 +27,8 @@ main() {
 
     await d.dir(cachePath, [
       d.dir("bin", [
-        d.matcherFile(binStubName("one"), contains("one")),
-        d.matcherFile(binStubName("two-renamed"), contains("second")),
+        d.file(binStubName("one"), contains("one")),
+        d.file(binStubName("two-renamed"), contains("second")),
         d.nothing(binStubName("two")),
         d.nothing(binStubName("nope"))
       ])

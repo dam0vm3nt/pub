@@ -31,7 +31,7 @@ main() {
 
     await waitForBuildSuccess();
 
-    var response =
+    response =
         await requestFromPub("file.txt", headers: {"if-none-match": etag});
     expect(response.statusCode, equals(200));
     expect(response.body, equals("new stuff"));

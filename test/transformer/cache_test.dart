@@ -72,7 +72,7 @@ main() {
     await d.dir(appPath, [
       d.dir(".pub/transformers", [
         d.file("manifest.txt", "0.1.2+3\nfoo"),
-        d.matcherFile("transformers.snapshot", isNot(isEmpty))
+        d.file("transformers.snapshot", isNot(isEmpty))
       ])
     ]).validate();
 
@@ -99,7 +99,7 @@ main() {
     await d.dir(appPath, [
       d.dir(".pub/transformers", [
         d.file("manifest.txt", "0.1.2+3\nfoo"),
-        d.matcherFile("transformers.snapshot", isNot(isEmpty))
+        d.file("transformers.snapshot", isNot(isEmpty))
       ])
     ]).validate();
   });
@@ -112,7 +112,7 @@ main() {
     await d.dir(appPath, [
       d.dir(".pub/transformers", [
         d.file("manifest.txt", "0.1.2+3\nfoo"),
-        d.matcherFile("transformers.snapshot", isNot(isEmpty))
+        d.file("transformers.snapshot", isNot(isEmpty))
       ])
     ]).validate();
 
@@ -133,7 +133,7 @@ main() {
     await d.dir(appPath, [
       d.dir(".pub/transformers", [
         d.file("manifest.txt", "0.1.2+3\nbar,foo"),
-        d.matcherFile("transformers.snapshot", isNot(isEmpty))
+        d.file("transformers.snapshot", isNot(isEmpty))
       ])
     ]).validate();
   });
@@ -146,7 +146,7 @@ main() {
     await d.dir(appPath, [
       d.dir(".pub/transformers", [
         d.file("manifest.txt", "0.1.2+3\nfoo"),
-        d.matcherFile("transformers.snapshot", isNot(isEmpty))
+        d.file("transformers.snapshot", isNot(isEmpty))
       ])
     ]).validate();
 
@@ -176,7 +176,7 @@ main() {
     await d.dir(appPath, [
       d.dir(".pub/transformers", [
         d.file("manifest.txt", "0.1.2+3\nfoo"),
-        d.matcherFile("transformers.snapshot", isNot(isEmpty))
+        d.file("transformers.snapshot", isNot(isEmpty))
       ])
     ]).validate();
   });
@@ -273,7 +273,7 @@ main() {
     await d.dir(appPath, [
       d.dir(".pub/transformers", [
         d.file("manifest.txt", "0.1.2+3\nbar,foo"),
-        d.matcherFile("transformers.snapshot", isNot(isEmpty))
+        d.file("transformers.snapshot", isNot(isEmpty))
       ])
     ]).validate();
   });

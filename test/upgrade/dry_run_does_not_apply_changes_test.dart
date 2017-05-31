@@ -38,7 +38,7 @@ main() {
 
     await d.dir(appPath, [
       // The lockfile should be unmodified.
-      d.matcherFile("pubspec.lock", contains("1.0.0")),
+      d.file("pubspec.lock", contains("1.0.0")),
       // The "packages" directory should not have been regenerated.
       d.nothing("packages")
     ]).validate();

@@ -27,7 +27,7 @@ main() {
     // Should be in global package cache.
     await d.dir(cachePath, [
       d.dir('global_packages', [
-        d.dir('foo', [d.matcherFile('pubspec.lock', contains('1.2.3'))])
+        d.dir('foo', [d.file('pubspec.lock', contains('1.2.3'))])
       ])
     ]).validate();
   });

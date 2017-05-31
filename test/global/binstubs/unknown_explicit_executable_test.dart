@@ -24,8 +24,8 @@ main() {
       "-x", "who", "-x", "one", "--executable", "wat"
     ]);
 
-    await expectLater(pub.stdout, emitsThrough("Installed executable one."));
-    await expectLater(pub.stderr, emits("Unknown executables wat and who."));
+    expect(pub.stdout, emitsThrough("Installed executable one."));
+    expect(pub.stderr, emits("Unknown executables wat and who."));
     await pub.shouldExit(exit_codes.DATA);
   });
 }

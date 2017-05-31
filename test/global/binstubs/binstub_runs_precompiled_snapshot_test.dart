@@ -20,10 +20,8 @@ main() {
     await runPub(args: ["global", "activate", "foo"]);
 
     await d.dir(cachePath, [
-      d.dir("bin", [
-        d.matcherFile(
-            binStubName("foo-script"), contains("script.dart.snapshot"))
-      ])
+      d.dir("bin",
+          [d.file(binStubName("foo-script"), contains("script.dart.snapshot"))])
     ]).validate();
   });
 }

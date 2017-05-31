@@ -28,12 +28,12 @@ main() {
     await runPub(args: ["global", "activate", "-spath", "../foo"]);
 
     var pub = await startPub(args: ["global", "activate", "-spath", "../bar"]);
-    await expectLater(pub.stdout, emitsThrough("Installed executable bar."));
-    await expectLater(pub.stderr,
+    expect(pub.stdout, emitsThrough("Installed executable bar."));
+    expect(pub.stderr,
         emits("Executable collide1 was already installed from foo."));
-    await expectLater(pub.stderr,
+    expect(pub.stderr,
         emits("Executable collide2 was already installed from foo."));
-    await expectLater(
+    expect(
         pub.stderr,
         emits("Deactivate the other package(s) or activate bar using "
             "--overwrite."));
@@ -41,10 +41,10 @@ main() {
 
     await d.dir(cachePath, [
       d.dir("bin", [
-        d.matcherFile(binStubName("foo"), contains("foo:foo")),
-        d.matcherFile(binStubName("bar"), contains("bar:bar")),
-        d.matcherFile(binStubName("collide1"), contains("foo:foo")),
-        d.matcherFile(binStubName("collide2"), contains("foo:foo"))
+        d.file(binStubName("foo"), contains("foo:foo")),
+        d.file(binStubName("bar"), contains("bar:bar")),
+        d.file(binStubName("collide1"), contains("foo:foo")),
+        d.file(binStubName("collide2"), contains("foo:foo"))
       ])
     ]).validate();
   });

@@ -25,7 +25,7 @@ main() {
     deleteEntry(p.join(d.sandbox, cachePath, 'global_packages/foo/.packages'));
 
     var pub = await pubRun(global: true, args: ["foo:script"]);
-    await expectLater(pub.stdout, emits("ok"));
+    expect(pub.stdout, emits("ok"));
     await pub.shouldExit();
   });
 
@@ -40,7 +40,7 @@ main() {
     deleteEntry(p.join(d.sandbox, cachePath, 'global_packages/foo/.packages'));
 
     var pub = await pubRun(global: true, args: ["foo"]);
-    await expectLater(pub.stdout, emits("ok"));
+    expect(pub.stdout, emits("ok"));
     await pub.shouldExit();
   });
 }

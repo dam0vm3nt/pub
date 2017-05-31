@@ -16,21 +16,21 @@ main() {
   setUp(d.validPackage.create);
 
   test('package creation provides a malformed error', () async {
-    var server = await ShelfTestServer.start();
+    var server = await ShelfTestServer.create();
     await d.credentialsFile(server, 'access token').create();
     var pub = await startPublish(server);
 
     await confirmPublish(pub);
-    await handleUploadForm(server);
-    await handleUpload(server);
+    handleUploadForm(server);
+    handleUpload(server);
 
     var body = {'error': 'Your package was too boring.'};
-    await server.handle('GET', '/create', (request) {
+    server.handler.expect('GET', '/create', (request) {
       return new shelf.Response.notFound(JSON.encode(body));
     });
 
-    await expectLater(pub.stderr, emits('Invalid server response:'));
-    await expectLater(pub.stderr, emits(JSON.encode(body)));
+    expect(pub.stderr, emits('Invalid server response:'));
+    expect(pub.stderr, emits(JSON.encode(body)));
     await pub.shouldExit(1);
   });
 }

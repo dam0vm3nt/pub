@@ -5,7 +5,7 @@
 import 'dart:convert';
 
 import 'package:shelf/shelf.dart' as shelf;
-import 'package:shelf_test_handler/shelf_test_handler';
+import 'package:shelf_test_handler/shelf_test_handler.dart';
 import 'package:test/test.dart';
 
 import '../descriptor.dart' as d;
@@ -17,7 +17,7 @@ main() {
       'refreshed access token to credentials.json', () async {
     await d.validPackage.create();
 
-    var server = await ShelfTestServer.start();
+    var server = await ShelfTestServer.create();
     await d
         .credentialsFile(server, 'access token',
             refreshToken: 'refresh token',
@@ -27,7 +27,7 @@ main() {
     var pub = await startPublish(server);
     await confirmPublish(pub);
 
-    await server.handle('POST', '/token', (request) {
+    server.handler.expect('POST', '/token', (request) {
       return request.readAsString().then((body) {
         expect(body,
             matches(new RegExp(r'(^|&)refresh_token=refresh\+token(&|$)')));
@@ -39,7 +39,7 @@ main() {
       });
     });
 
-    await server.handle('GET', '/api/packages/versions/new', (request) {
+    server.handler.expect('GET', '/api/packages/versions/new', (request) {
       expect(request.headers,
           containsPair('authorization', 'Bearer new access token'));
 

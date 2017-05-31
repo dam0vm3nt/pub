@@ -45,7 +45,7 @@ main() {
             d.dir('web', [
               d.dir('packages', [
                 d.dir(appPath, [
-                  d.matcherFile(
+                  d.file(
                       'lib__message.js',
                       isNot(
                           contains("# sourceMappingURL=lib__message.js.map"))),

@@ -37,7 +37,7 @@ main() {
 
     // Should now run the git one.
     var pub = await pubRun(global: true, args: ["foo"]);
-    await expectLater(pub.stdout, emits("git"));
+    expect(pub.stdout, emits("git"));
     await pub.shouldExit();
   });
 }

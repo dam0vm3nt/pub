@@ -43,7 +43,7 @@ main() {
     await pubGet(output: contains("Precompiled foo:hello."));
 
     await d.dir(p.join(appPath, '.pub', 'bin'), [
-      d.dir('foo', [d.matcherFile('hello.dart.snapshot', contains('hello!'))])
+      d.dir('foo', [d.file('hello.dart.snapshot', contains('hello!'))])
     ]).validate();
 
     var process = await pubRun(args: ['foo:hello']);

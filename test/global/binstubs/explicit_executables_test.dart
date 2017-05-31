@@ -31,11 +31,9 @@ main() {
 
     await d.dir(cachePath, [
       d.dir("bin", [
-        d.matcherFile(
-            binStubName("one"), contains("pub global run foo:script")),
+        d.file(binStubName("one"), contains("pub global run foo:script")),
         d.nothing(binStubName("two")),
-        d.matcherFile(
-            binStubName("three"), contains("pub global run foo:script"))
+        d.file(binStubName("three"), contains("pub global run foo:script"))
       ])
     ]).validate();
   });

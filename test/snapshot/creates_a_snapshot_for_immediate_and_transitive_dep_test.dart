@@ -35,19 +35,19 @@ main() {
     await d.dir(p.join(appPath, '.pub', 'bin'), [
       d.file('sdk-version', '0.1.2+3\n'),
       d.dir('foo', [
-        d.matcherFile('hello.dart.snapshot', contains('hello!')),
-        d.matcherFile('goodbye.dart.snapshot', contains('goodbye!')),
+        d.file('hello.dart.snapshot', contains('hello!')),
+        d.file('goodbye.dart.snapshot', contains('goodbye!')),
         d.nothing('shell.sh.snapshot'),
         d.nothing('subdir')
       ])
     ]).validate();
 
     var process = await pubRun(args: ['foo:hello']);
-    await process.stdout.expect("hello!");
+    expect(process.stdout, emits("hello!"));
     await process.shouldExit();
 
     process = await pubRun(args: ['foo:goodbye']);
-    await process.stdout.expect("goodbye!");
+    expect(process.stdout, emits("goodbye!"));
     await process.shouldExit();
   });
 }

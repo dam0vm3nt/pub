@@ -210,7 +210,7 @@ Future<PubProcess> pubRun({bool global: false, Iterable<String> args}) async {
 
   // Loading sources and transformers isn't normally printed, but the pub test
   // infrastructure runs pub in verbose mode, which enables this.
-  await expectLater(pub.stdout, mayEmitMultiple(startsWith("Loading")));
+  expect(pub.stdout, mayEmitMultiple(startsWith("Loading")));
 
   return pub;
 }

@@ -38,14 +38,13 @@ main() {
         ["arg1", "arg2"],
         environment: getEnvironment());
 
-    await expectLater(
-        process.stderr, emits(startsWith("Wrong script snapshot version")));
-    await expectLater(process.stdout, emitsThrough("ok [arg1, arg2]"));
+    expect(process.stderr, emits(startsWith("Wrong script snapshot version")));
+    expect(process.stdout, emitsThrough("ok [arg1, arg2]"));
     await process.shouldExit();
 
     await d.dir(cachePath, [
       d.dir('global_packages/foo/bin', [
-        d.binaryMatcherFile(
+        d.file(
             'script.dart.snapshot',
             isNot(
                 equals(readBinaryFile(testAssetPath('out-of-date.snapshot')))))

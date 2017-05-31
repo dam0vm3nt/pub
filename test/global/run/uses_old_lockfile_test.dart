@@ -46,13 +46,13 @@ packages:
     ]).create();
 
     var pub = await pubRun(global: true, args: ["foo:script"]);
-    await expectLater(pub.stdout, emits("bar 1.0.0"));
+    expect(pub.stdout, emits("bar 1.0.0"));
     await pub.shouldExit();
 
     await d.dir(cachePath, [
       d.dir('global_packages', [
         d.nothing('foo.lock'),
-        d.dir('foo', [d.matcherFile('pubspec.lock', contains('1.0.0'))])
+        d.dir('foo', [d.file('pubspec.lock', contains('1.0.0'))])
       ])
     ]).validate();
   });

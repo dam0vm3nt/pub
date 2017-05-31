@@ -26,9 +26,7 @@ main() {
     await d.appDir({"foo": "any"}).create();
 
     // Also delete the "packages" directory.
-    await schedule(() {
-      deleteEntry(path.join(d.sandbox, appPath, "packages"));
-    });
+    deleteEntry(path.join(d.sandbox, appPath, "packages"));
 
     // Do the dry run.
     await pubDowngrade(
@@ -38,7 +36,7 @@ main() {
 
     await d.dir(appPath, [
       // The lockfile should be unmodified.
-      d.matcherFile("pubspec.lock", contains("2.0.0")),
+      d.file("pubspec.lock", contains("2.0.0")),
       // The "packages" directory should not have been regenerated.
       d.nothing("packages")
     ]).validate();

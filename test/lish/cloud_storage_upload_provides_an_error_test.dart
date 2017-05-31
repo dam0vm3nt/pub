@@ -16,14 +16,14 @@ main() {
   setUp(d.validPackage.create);
 
   test('cloud storage upload provides an error', () async {
-    var server = await ShelfTestServer.start();
+    var server = await ShelfTestServer.create();
     await d.credentialsFile(server, 'access token').create();
     var pub = await startPublish(server);
 
     await confirmPublish(pub);
-    await handleUploadForm(server);
+    handleUploadForm(server);
 
-    await server.handle('POST', '/upload', (request) {
+    server.handler.expect('POST', '/upload', (request) {
       return drainStream(request.read()).then((_) {
         return new shelf.Response.notFound(
             '<Error><Message>Your request sucked.</Message></Error>',
@@ -33,7 +33,7 @@ main() {
 
     // TODO(nweiz): This should use the server's error message once the client
     // can parse the XML.
-    await expectLater(pub.stderr, emits('Failed to upload the package.'));
+    expect(pub.stderr, emits('Failed to upload the package.'));
     await pub.shouldExit(1);
   });
 }

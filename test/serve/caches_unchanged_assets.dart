@@ -25,7 +25,7 @@ main() {
     expect(response.body, equals("stuff"));
     var etag = response.headers["etag"];
 
-    var response =
+    response =
         await requestFromPub("file.txt", headers: {"if-none-match": etag});
     expect(response.statusCode, equals(304));
     expect(response.headers["etag"], equals(etag));

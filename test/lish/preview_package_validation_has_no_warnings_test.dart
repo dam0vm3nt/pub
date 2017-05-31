@@ -18,7 +18,7 @@ main() {
     pkg["author"] = "Natalie Weizenbaum <nweiz@google.com>";
     await d.dir(appPath, [d.pubspec(pkg)]).create();
 
-    var server = await ShelfTestServer.start();
+    var server = await ShelfTestServer.create();
     var pub = await startPublish(server, args: ['--dry-run']);
 
     await pub.shouldExit(exit_codes.SUCCESS);

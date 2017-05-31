@@ -38,7 +38,7 @@ main() {
     await d.dir(appPath, [
       d.dir('build', [
         d.dir('foo', [
-          d.matcherFile('file.dart.js', isNot(isEmpty)),
+          d.file('file.dart.js', isNot(isEmpty)),
           d.dir('packages', [
             d.dir('browser', [
               d.file('dart.js', 'contents of dart.js'),
@@ -52,11 +52,11 @@ main() {
                 d.file('interop.js', 'contents of interop.js')
               ])
             ]),
-            d.matcherFile('subfile.dart.js', isNot(isEmpty)),
+            d.file('subfile.dart.js', isNot(isEmpty)),
           ])
         ]),
         d.dir('web', [
-          d.matcherFile('file.dart.js', isNot(isEmpty)),
+          d.file('file.dart.js', isNot(isEmpty)),
           d.dir('packages', [
             d.dir('browser', [
               d.file('dart.js', 'contents of dart.js'),
@@ -70,7 +70,7 @@ main() {
                 d.file('interop.js', 'contents of interop.js')
               ])
             ]),
-            d.matcherFile('subfile.dart.js', isNot(isEmpty))
+            d.file('subfile.dart.js', isNot(isEmpty))
           ])
         ])
       ])

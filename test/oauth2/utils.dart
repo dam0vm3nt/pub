@@ -2,11 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:shelf/shelf.dart' as shelf;
-import 'package:shelf_test_handler/shelf_test_handler';
+import 'package:shelf_test_handler/shelf_test_handler.dart';
 import 'package:test/test.dart';
 import 'package:test_process/test_process.dart';
 
@@ -14,7 +15,7 @@ import 'package:pub/src/utils.dart';
 
 Future authorizePub(TestProcess pub, ShelfTestServer server,
     [String accessToken = "access token"]) async {
-  await expectLater(
+  expect(
       pub.stdout,
       emits('Pub needs your authorization to upload packages on your '
           'behalf.'));
@@ -32,11 +33,11 @@ Future authorizePub(TestProcess pub, ShelfTestServer server,
   expect(response.headers['location'],
       equals('http://pub.dartlang.org/authorized'));
 
-  await handleAccessTokenRequest(server, accessToken);
+  handleAccessTokenRequest(server, accessToken);
 }
 
-Future handleAccessTokenRequest(ShelfTestServer server, String accessToken) {
-  return server.handle('POST', '/token', (request) async {
+void handleAccessTokenRequest(ShelfTestServer server, String accessToken) {
+  server.handler.expect('POST', '/token', (request) async {
     var body = await request.readAsString();
     expect(body, matches(new RegExp(r'(^|&)code=access\+code(&|$)')));
 

@@ -89,10 +89,7 @@ main() {
       await d.appDir({
         "foo": {
           "version": "1.0.0",
-          "hosted": {
-            "name": "foo",
-            "url": server.port.then((port) => "http://localhost:$port")
-          }
+          "hosted": {"name": "foo", "url": "http://localhost:${server.port}"}
         }
       }).create();
 

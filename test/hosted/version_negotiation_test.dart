@@ -12,7 +12,7 @@ import '../test_pub.dart';
 main() {
   forBothPubGetAndUpgrade((command) {
     test('sends the correct Accept header', () async {
-      var server = await ShelfTestServer.start();
+      var server = await ShelfTestServer.create();
 
       await d.appDir({
         "foo": {
@@ -22,7 +22,7 @@ main() {
 
       var pub = await startPub(args: [command.name]);
 
-      await server.handler.handle('GET', '/api/packages/foo', (request) {
+      server.handler.expect('GET', '/api/packages/foo', (request) {
         expect(
             request.headers['accept'], equals('application/vnd.pub.v2+json'));
         return new shelf.Response(200);
@@ -32,7 +32,7 @@ main() {
     });
 
     test('prints a friendly error if the version is out-of-date', () async {
-      var server = await ShelfTestServer.start();
+      var server = await ShelfTestServer.create();
 
       await d.appDir({
         "foo": {
@@ -42,7 +42,7 @@ main() {
 
       var pub = await startPub(args: [command.name]);
 
-      await server.handle(
+      server.handler.expect(
           'GET', '/api/packages/foo', (request) => new shelf.Response(406));
 
       await pub.shouldExit(1);

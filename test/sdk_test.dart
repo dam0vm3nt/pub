@@ -52,7 +52,7 @@ main() {
           environment: {'FLUTTER_ROOT': p.join(d.sandbox, 'flutter')});
 
       await d
-          .matcherFile("$appPath/pubspec.lock",
+          .file("$appPath/pubspec.lock",
               allOf([contains("0.0.1"), isNot(contains("0.0.2"))]))
           .validate();
 
@@ -62,7 +62,7 @@ main() {
           environment: {'FLUTTER_ROOT': p.join(d.sandbox, 'flutter')});
 
       await d
-          .matcherFile("$appPath/pubspec.lock",
+          .file("$appPath/pubspec.lock",
               allOf([isNot(contains("0.0.1")), contains("0.0.2")]))
           .validate();
     });

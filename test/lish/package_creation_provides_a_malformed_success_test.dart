@@ -16,16 +16,16 @@ main() {
   setUp(d.validPackage.create);
 
   test('package creation provides a malformed success', () async {
-    var server = await ShelfTestServer.start();
+    var server = await ShelfTestServer.create();
     await d.credentialsFile(server, 'access token').create();
     var pub = await startPublish(server);
 
     await confirmPublish(pub);
-    await handleUploadForm(server);
-    await handleUpload(server);
+    handleUploadForm(server);
+    handleUpload(server);
 
     var body = {'success': 'Your package was awesome.'};
-    await server.handle('GET', '/create', (request) {
+    server.handler.expect('GET', '/create', (request) {
       return new shelf.Response.ok(JSON.encode(body));
     });
 

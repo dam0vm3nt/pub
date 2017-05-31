@@ -5,6 +5,8 @@
 // Dart2js can take a long time to compile dart code, so we increase the timeout
 // to cope with that.
 @Timeout.factor(3)
+import 'dart:async';
+
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 

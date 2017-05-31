@@ -34,7 +34,7 @@ void main() => print(message);
     await pubGet(output: contains("Precompiled foo:hello."));
 
     await d.dir(p.join(appPath, '.pub', 'bin', 'foo'),
-        [d.matcherFile('hello.dart.snapshot', contains('hello!'))]).validate();
+        [d.file('hello.dart.snapshot', contains('hello!'))]).validate();
 
     await globalPackageServer.add((builder) {
       builder.serve("bar", "1.2.4", contents: [
@@ -44,9 +44,8 @@ void main() => print(message);
 
     await pubUpgrade(output: contains("Precompiled foo:hello."));
 
-    await d.dir(p.join(appPath, '.pub', 'bin', 'foo'), [
-      d.matcherFile('hello.dart.snapshot', contains('hello 2!'))
-    ]).validate();
+    await d.dir(p.join(appPath, '.pub', 'bin', 'foo'),
+        [d.file('hello.dart.snapshot', contains('hello 2!'))]).validate();
 
     var process = await pubRun(args: ['foo:hello']);
     expect(process.stdout, emits("hello 2!"));

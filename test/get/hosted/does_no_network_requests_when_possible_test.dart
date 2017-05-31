@@ -22,7 +22,7 @@ main() {
 
     // Clear the cache. We don't care about anything that was served during
     // the initial get.
-    globalServer.clearRequestedPaths();
+    globalServer.requestedPaths.clear();
 
     // Run the solver again now that it's cached.
     await pubGet();
