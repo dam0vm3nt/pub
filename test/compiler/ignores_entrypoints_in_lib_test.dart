@@ -25,7 +25,7 @@ main() {
   testWithCompiler("build ignores Dart entrypoints in lib", (compiler) async {
     await pubGet();
     await runPub(
-        args: ["build", "--all", "--compiler=${compiler.name}"],
+        args: ["build", "--all", "--web-compiler=${compiler.name}"],
         output: new RegExp(r'Built [\d]+ files? to "build".'));
 
     await d.dir(appPath, [

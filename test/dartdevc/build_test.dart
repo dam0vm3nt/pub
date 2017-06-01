@@ -9,7 +9,8 @@ import '../descriptor.dart' as d;
 import '../test_pub.dart';
 
 main() {
-  test("pub build --compiler=dartdevc creates all required sources", () async {
+  test("pub build --web-compiler=dartdevc creates all required sources",
+      () async {
     await d.dir("foo", [
       d.libPubspec("foo", "1.0.0"),
       d.dir("lib", [
@@ -58,7 +59,7 @@ void main() => other.main();
 
     await pubGet();
     await runPub(
-        args: ["build", "web", "--compiler=${Compiler.dartDevc.name}"],
+        args: ["build", "web", "--web-compiler=${Compiler.dartDevc.name}"],
         output: new RegExp(r'Built [\d]+ files to "build".'));
 
     await d.dir(appPath, [

@@ -32,7 +32,7 @@ main() {
   });
 
   testWithCompiler("Pub build reports Dart parse errors", (compiler) async {
-    var pub = await startPub(args: ["build", "--compiler", compiler.name]);
+    var pub = await startPub(args: ["build", "--web-compiler", compiler.name]);
     await _expectErrors(pub, compiler);
 
     await pub.shouldExit(exit_codes.DATA);
@@ -44,7 +44,7 @@ main() {
   });
 
   testWithCompiler("Pub serve reports Dart parse errors", (compiler) async {
-    var pub = await pubServe(args: ["--compiler", compiler.name]);
+    var pub = await pubServe(args: ["--web-compiler", compiler.name]);
 
     switch (compiler) {
       case Compiler.dartDevc:

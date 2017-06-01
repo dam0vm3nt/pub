@@ -17,6 +17,6 @@ void testWithCompiler(String name, FutureOr testFn(Compiler compiler),
     {List<Compiler> compilers}) {
   compilers ??= [Compiler.dart2JS, Compiler.dartDevc];
   for (var compiler in compilers) {
-    test('--compiler=${compiler.name} $name', () => testFn(compiler));
+    test('--web-compiler=${compiler.name} $name', () => testFn(compiler));
   }
 }

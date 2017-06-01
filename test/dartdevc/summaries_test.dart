@@ -52,7 +52,7 @@ void main() {}
     ]).create();
 
     await pubGet();
-    await pubServe(args: ['--compiler', 'dartdevc']);
+    await pubServe(args: ['--web-compiler', 'dartdevc']);
 
     await linkedSummaryRequestShouldSucceed(
         'web__main$linkedSummaryExtension', [
@@ -121,7 +121,7 @@ void main() {}
     ]).create();
 
     await pubGet();
-    await pubServe(args: ['--compiler', 'dartdevc']);
+    await pubServe(args: ['--web-compiler', 'dartdevc']);
 
     await unlinkedSummaryRequestShouldSucceed(
         'web__main$unlinkedSummaryExtension', [endsWith('web/main.dart')]);

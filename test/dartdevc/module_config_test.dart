@@ -53,7 +53,7 @@ main() {}
     ]).create();
 
     await pubGet();
-    await pubServe(args: ['--compiler', 'dartdevc']);
+    await pubServe(args: ['--web-compiler', 'dartdevc']);
 
     await moduleRequestShouldSucceed(moduleConfigName, [
       makeModule(

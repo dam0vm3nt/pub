@@ -25,7 +25,7 @@ main() {
   testWithCompiler("build ignores non-entrypoint Dart files", (compiler) async {
     await pubGet();
     await runPub(
-        args: ["build", "--compiler=${compiler.name}"],
+        args: ["build", "--web-compiler=${compiler.name}"],
         output: new RegExp(r'Built [\d]+ files? to "build".'));
 
     await d.dir(appPath, [

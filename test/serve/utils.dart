@@ -152,7 +152,7 @@ Future<TestProcess> startPubServe(
     "--log-admin-url",
   ];
   if (compiler != null) {
-    pubArgs.add("--compiler=${compiler.name}");
+    pubArgs.add("--web-compiler=${compiler.name}");
   }
 
   if (args != null) pubArgs.addAll(args);

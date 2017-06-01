@@ -13,7 +13,8 @@ import '../serve/utils.dart';
 import 'utils.dart';
 
 main() {
-  testWithCompiler("compiler flag switches compilers", (compiler) async {
+  testWithCompiler("--web-compiler option switches compilers",
+      (compiler) async {
     await d.dir(appPath, [
       d.appPubspec(),
       d.dir("lib", [
@@ -65,40 +66,101 @@ main() {
     await endPubServe();
   }, compilers: Compiler.all);
 
-  test("invalid compiler flag gives an error", () async {
+  test("invalid --web-compiler option gives an error", () async {
     await d.dir(appPath, [
       d.appPubspec(),
     ]).create();
 
     await pubGet();
-    var process = await startPubServe(args: ['--compiler', 'invalid']);
+    var process = await startPubServe(args: ['--web-compiler', 'invalid']);
     await process.shouldExit(USAGE);
-    expect(
-        process.stderr,
-        emitsThrough(
-            '"invalid" is not an allowed value for option "compiler".'));
+    expect(process.stderr, emitsThrough(
+        '"invalid" is not an allowed value for option "web-compiler".'));
   });
 
-  test("--dart2js with --compiler is invalid", () async {
+  test("--dart2js with --web-compiler is invalid", () async {
     await d.dir(appPath, [
       d.appPubspec(),
     ]).create();
 
     await pubGet();
     var argCombos = [
-      ['--dart2js', '--compiler=dartdevc'],
-      ['--no-dart2js', '--compiler=dartdevc'],
-      ['--dart2js', '--compiler=dart2js'],
-      ['--no-dart2js', '--compiler=dart2js'],
+      ['--dart2js', '--web-compiler=dartdevc'],
+      ['--no-dart2js', '--web-compiler=dartdevc'],
+      ['--dart2js', '--web-compiler=dart2js'],
+      ['--no-dart2js', '--web-compiler=dart2js'],
     ];
     for (var args in argCombos) {
       var process = await startPubServe(args: args);
       await process.shouldExit(USAGE);
-      expect(
-          process.stderr,
-          emitsThrough(
-              "The --dart2js flag can't be used with the --compiler arg. Prefer "
-              "using the --compiler arg as --[no]-dart2js is deprecated."));
+      expect(process.stderr, emitsThrough(
+          "The --dart2js flag can't be used with the --web-compiler arg. Prefer "
+          "using the --web-compiler arg as --[no]-dart2js is deprecated."));
     }
+  });
+
+  testWithCompiler("web compiler can be set in the pubspec", (compiler) async{
+await     d.dir(appPath, [
+      d.pubspec({
+        'name': 'myapp',
+        'web': {
+          'compiler': {'debug': compiler.name}
+        },
+      }),
+      d.dir('web', [
+        d.file(
+            'main.dart',
+            '''
+          void main() => print('hello');
+        '''),
+      ]),
+    ]).create();
+
+await     pubGet();
+await     pubServe(args: ['--mode', 'debug']);
+    switch (compiler) {
+      case Compiler.dartDevc:
+      await   requestShouldSucceed(moduleConfigName, contains('web__main'));
+await         requestShouldSucceed('web__main.js', contains('hello'));
+        break;
+      case Compiler.dart2JS:
+      await   requestShouldSucceed('main.dart.js', contains('hello'));
+await         requestShould404('web__main.js');
+        break;
+    }
+await     endPubServe();
+  });
+
+  testWithCompiler("--web-compiler flag overrides pubspec config",
+      (compiler) async {
+await     d.dir(appPath, [
+      d.pubspec({
+        'name': 'myapp',
+        'web': {
+          'compiler': {'debug': Compiler.none.name}
+        },
+      }),
+      d.dir('web', [
+        d.file(
+            'main.dart',
+            '''
+          void main() => print('hello');
+        '''),
+      ]),
+    ]).create();
+
+await     pubGet();
+await     pubServe(compiler: compiler, args: ['--mode', 'debug']);
+    switch (compiler) {
+      case Compiler.dartDevc:
+      await   requestShouldSucceed(moduleConfigName, contains('web__main'));
+await         requestShouldSucceed('web__main.js', contains('hello'));
+        break;
+      case Compiler.dart2JS:
+      await   requestShouldSucceed('main.dart.js', contains('hello'));
+await         requestShould404('web__main.js');
+        break;
+    }
+await     endPubServe();
   });
 }
