@@ -39,7 +39,8 @@ main() {
     await requestShouldSucceed("file.out", "before.out");
 
     // Replace file.txt by renaming other on top of it.
-    new File(p.join(d.sandbox, appPath, "other")).renameSync(p.join(d.sandbox, appPath, "web", "file.txt"));
+    new File(p.join(d.sandbox, appPath, "other"))
+        .renameSync(p.join(d.sandbox, appPath, "web", "file.txt"));
 
     // Read the transformed file to ensure the change is actually noticed by
     // pub and not that we just get the new file contents piped through

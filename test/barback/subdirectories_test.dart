@@ -55,11 +55,11 @@ main() {
   test("serves subdirectories", () async {
     await pubServe(args: [webOne, webTwoInner]);
 
-await     requestShouldSucceed("inner/file.txt", "one", root: webOne);
-await     requestShouldSucceed("file.txt", "two", root: webTwoInner);
-await     expectNotServed("web");
-await     expectNotServed(p.join("web", "three"));
+    await requestShouldSucceed("inner/file.txt", "one", root: webOne);
+    await requestShouldSucceed("file.txt", "two", root: webTwoInner);
+    await expectNotServed("web");
+    await expectNotServed(p.join("web", "three"));
 
-await     endPubServe();
+    await endPubServe();
   });
 }

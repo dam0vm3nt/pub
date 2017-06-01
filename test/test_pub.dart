@@ -364,7 +364,8 @@ Future<PubProcess> startPub(
   ]..addAll(args);
 
   return await PubProcess.start(dartBin, dartArgs,
-      environment: getPubTestEnvironment(tokenEndpoint)..addAll(environment ?? {}),
+      environment: getPubTestEnvironment(tokenEndpoint)
+        ..addAll(environment ?? {}),
       workingDirectory: _pathInSandbox(appPath),
       description: args.isEmpty ? 'pub' : 'pub ${args.first}');
 }
