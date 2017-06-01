@@ -48,4 +48,8 @@ environment:
 
 dependency_overrides:
   test_descriptor: {path: test_descriptor}
+  test_process:
+    git:
+      url: git://github.com/dart-lang/test_process
+      ref: log-superclass
 
