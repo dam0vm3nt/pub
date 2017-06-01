@@ -9,7 +9,8 @@ import '../descriptor.dart' as d;
 import '../test_pub.dart';
 
 main() {
-  integration("pub build --web-compiler=dartdevc creates all required sources", () {
+  integration("pub build --web-compiler=dartdevc creates all required sources",
+      () {
     d.dir("foo", [
       d.libPubspec("foo", "1.0.0"),
       d.dir("lib", [
