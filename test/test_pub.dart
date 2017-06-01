@@ -246,7 +246,7 @@ Future runPub(
     outputJson,
     silent,
     int exitCode: exit_codes.SUCCESS,
-    environment}) async {
+    Map<String, String> environment}) async {
   // Cannot pass both output and outputJson.
   assert(output == null || outputJson == null);
 
@@ -364,7 +364,7 @@ Future<PubProcess> startPub(
   ]..addAll(args);
 
   return await PubProcess.start(dartBin, dartArgs,
-      environment: getPubTestEnvironment(tokenEndpoint),
+      environment: getPubTestEnvironment(tokenEndpoint)..addAll(environment ?? {}),
       workingDirectory: _pathInSandbox(appPath),
       description: args.isEmpty ? 'pub' : 'pub ${args.first}');
 }

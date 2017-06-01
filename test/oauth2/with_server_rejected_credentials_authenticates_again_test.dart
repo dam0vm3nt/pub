@@ -33,7 +33,7 @@ main() {
           });
     });
 
-    expect(
+    await expectLater(
         pub.stderr, emits('OAuth2 authorization failed (your token sucks).'));
     expect(pub.stdout, emits(startsWith('Uploading...')));
     await pub.kill();

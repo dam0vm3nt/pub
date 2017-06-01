@@ -43,11 +43,11 @@ const TOKEN = "before";
     await pubServe(args: ["test"], compiler: compiler);
     switch (compiler) {
       case Compiler.dart2JS:
-        requestShouldSucceed("main.dart.js", contains("(before, munge)"),
+        await requestShouldSucceed("main.dart.js", contains("(before, munge)"),
             root: "test");
         break;
       case Compiler.dartDevc:
-        requestShouldSucceed("test__main.js", contains("(before, munge)"),
+        await requestShouldSucceed("test__main.js", contains("(before, munge)"),
             root: "test");
         break;
     }

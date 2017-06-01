@@ -895,7 +895,7 @@ void dartSdkConstraint() {
 }
 
 void flutterSdkConstraint() {
-  group('without a Flutter SDK', () async {
+  group('without a Flutter SDK', () {
     test('fails for the root package', () async {
       await d.dir(appPath, [
         await d.pubspec({

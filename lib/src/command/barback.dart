@@ -69,7 +69,7 @@ abstract class BarbackCommand extends PubCommand {
         negatable: false);
 
     argParser.addOption("compiler",
-        allowed: Compiler.names,
+        allowed: Compiler.names.toList(),
         defaultsTo: 'dart2js',
         help: 'The JavaScript compiler to use to build the app.');
   }

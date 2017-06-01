@@ -16,7 +16,7 @@ String root;
 Entrypoint entrypoint;
 
 main() {
-  group('not in a git repo', () async {
+  group('not in a git repo', () {
     setUp(() async {
       await d.appDir().create();
       createEntrypoint();

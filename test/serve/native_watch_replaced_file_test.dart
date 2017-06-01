@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 
@@ -37,8 +39,7 @@ main() {
     await requestShouldSucceed("file.out", "before.out");
 
     // Replace file.txt by renaming other on top of it.
-    renameInSandbox(
-        p.join(appPath, "other"), p.join(appPath, "web", "file.txt"));
+    new File(p.join(d.sandbox, appPath, "other")).renameSync(p.join(d.sandbox, appPath, "web", "file.txt"));
 
     // Read the transformed file to ensure the change is actually noticed by
     // pub and not that we just get the new file contents piped through

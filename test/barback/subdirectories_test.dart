@@ -52,14 +52,14 @@ main() {
     ]).validate();
   });
 
-  test("serves subdirectories", () {
-    pubServe(args: [webOne, webTwoInner]);
+  test("serves subdirectories", () async {
+    await pubServe(args: [webOne, webTwoInner]);
 
-    requestShouldSucceed("inner/file.txt", "one", root: webOne);
-    requestShouldSucceed("file.txt", "two", root: webTwoInner);
-    expectNotServed("web");
-    expectNotServed(p.join("web", "three"));
+await     requestShouldSucceed("inner/file.txt", "one", root: webOne);
+await     requestShouldSucceed("file.txt", "two", root: webTwoInner);
+await     expectNotServed("web");
+await     expectNotServed(p.join("web", "three"));
 
-    endPubServe();
+await     endPubServe();
   });
 }

@@ -16,9 +16,9 @@ Validator compiledDartdoc(Entrypoint entrypoint) =>
     new CompiledDartdocValidator(entrypoint);
 
 main() {
-  group('should consider a package valid if it', () async {
-    setUp(d.validPackage.create);
+  setUp(d.validPackage.create);
 
+  group('should consider a package valid if it', () {
     test('looks normal', () => expectNoValidationError(compiledDartdoc));
 
     test('has most but not all files from compiling dartdoc', () async {
@@ -65,7 +65,7 @@ main() {
     });
   });
 
-  group("should consider a package invalid if it", () async {
+  group("should consider a package invalid if it", () {
     test('contains compiled dartdoc', () async {
       await d.dir(appPath, [
         d.dir('doc-out', [

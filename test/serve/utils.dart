@@ -143,7 +143,7 @@ class DartTransformer extends Transformer {
 ///
 /// Returns the `pub serve` process.
 Future<TestProcess> startPubServe(
-    {Iterable<String> args, bool createWebDir: true, Compiler compiler}) {
+    {Iterable<String> args, bool createWebDir: true, Compiler compiler}) async {
   var pubArgs = [
     "serve",
     "--port=0", // Use port 0 to get an ephemeral port.
@@ -157,8 +157,8 @@ Future<TestProcess> startPubServe(
 
   if (args != null) pubArgs.addAll(args);
 
-  if (createWebDir) d.dir(appPath, [d.dir("web")]).create();
-  return startPub(args: pubArgs);
+  if (createWebDir) await d.dir(appPath, [d.dir("web")]).create();
+  return await startPub(args: pubArgs);
 }
 
 /// Starts the "pub serve" process and records its port number for future
@@ -346,7 +346,7 @@ Future<Map> webSocketRequest(String method, [Map params]) async {
 Future<Map> expectWebSocketResult(String method, Map params, result) async {
   var response = await webSocketRequest(method, params);
   expect(response["result"], result);
-  return response;
+  return response["result"];
 }
 
 /// Sends a JSON RPC 2.0 request to the running pub serve's web socket

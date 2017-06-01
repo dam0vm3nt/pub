@@ -34,8 +34,8 @@ main() {
     await process.shouldExit();
 
     await d.dir(p.join(appPath, '.pub', 'bin'), [
-      d.file('sdk-version', '0.1.2+3'),
+      d.file('sdk-version', '0.1.2+3\n'),
       d.dir('foo', [d.file('hello.dart.snapshot', contains('hello!'))])
-    ]).create();
+    ]).validate();
   });
 }
