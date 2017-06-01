@@ -48,4 +48,5 @@ environment:
 
 dependency_overrides:
   test_descriptor: {path: ../pkg/descriptor}
+  test_process: {path: ../pkg/test_process}
 
