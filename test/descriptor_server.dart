@@ -55,8 +55,12 @@ class DescriptorServer {
   /// The list of paths that have been requested from this server.
   final requestedPaths = <String>[];
 
+  /// The base directory descriptor of the directories served by [this].
   final d.DirectoryDescriptor _baseDir;
 
+  /// The descriptors served by this server.
+  ///
+  /// This can safely be modified between requests.
   List<d.Descriptor> get contents => _baseDir.contents;
 
   /// Creates an HTTP server to serve [contents] as static files.
@@ -88,7 +92,8 @@ class DescriptorServer {
     addTearDown(() => _server.close());
   }
 
-  DescriptorServer._errors(this._server) {
+  DescriptorServer._errors(this._server)
+      : _baseDir = d.dir("serve-dir", []) {
     _server.mount((request) {
       fail("The HTTP server received an unexpected request:\n"
           "${request.method} ${request.requestedUri}");
