@@ -92,8 +92,7 @@ class DescriptorServer {
     addTearDown(() => _server.close());
   }
 
-  DescriptorServer._errors(this._server)
-      : _baseDir = d.dir("serve-dir", []) {
+  DescriptorServer._errors(this._server) : _baseDir = d.dir("serve-dir", []) {
     _server.mount((request) {
       fail("The HTTP server received an unexpected request:\n"
           "${request.method} ${request.requestedUri}");
